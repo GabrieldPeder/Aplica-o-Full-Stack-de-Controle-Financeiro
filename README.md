@@ -6,7 +6,7 @@ por categoria e fonte/destino, compras parceladas no cartão, relatórios e prev
 
 **Grupo:** Gabriel de Peder · João Vitor Antoniel
 
-Especificação do grupo: [`docs/superpowers/specs/2026-11-12-controle-financeiro-design.md`](docs/superpowers/specs/2026-11-12-controle-financeiro-design.md)
+Documentação do grupo: [especificação](docs/especificacao.md) e [planos de cada PR](docs/planos/README.md).
 
 ## Tecnologias
 

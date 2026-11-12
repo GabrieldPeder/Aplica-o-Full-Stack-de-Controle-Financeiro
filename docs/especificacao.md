@@ -16,7 +16,7 @@ Este documento registra as decisões do grupo.
 | Acesso ao banco | SQL puro com `pg` (Pool + queries parametrizadas `$1`) |
 | Bibliotecas back-end | `express`, `pg`, `bcrypt`, `jsonwebtoken`, `dotenv`, `cors`, `express-rate-limit` |
 | Bibliotecas front-end | `react-router-dom`, `axios`, `recharts` |
-| Testes | Runner nativo `node:test` + `assert` + `fetch` nativo (sem dependência extra) |
+| Testes | Executor de testes nativo do Node (`node:test`) + `assert` + `fetch` nativo (sem dependência extra) |
 | Postgres local | `backend/docker-compose.yml` (alternativa: Postgres instalado, documentada no README) |
 | Estilo visual | CSS próprio (sem biblioteca de componentes) |
 
@@ -28,7 +28,7 @@ Este documento registra as decisões do grupo.
 /
 ├── README.md
 ├── .gitignore                    → node_modules, .env, dist
-├── docs/superpowers/             → especificação e plano (este documento)
+├── docs/                         → especificacao.md (este documento) e planos/ (um plano por PR)
 ├── backend/
 │   ├── package.json              → scripts: dev, start, test, db:criar, db:seed
 │   ├── .env.example
@@ -108,7 +108,7 @@ Base: o DDL do enunciado, com estes acréscimos/ajustes:
 - Formato único de erro: `{ "erro": "mensagem", "campos": { "campo": "mensagem" } }` (`campos` opcional).
 - Status: `200` leitura/edição, `201` criação, `204` exclusão, `400` dados inválidos, `401` sem token/token inválido/credenciais inválidas, `404` registro inexistente **para este usuário**, `409` duplicado ou com vínculo, `429` excesso de tentativas, `500` erro inesperado (sem stack na resposta).
 - Datas trafegam como `AAAA-MM-DD`; valores como número com 2 casas (ex.: `33.34`).
-- Camelcase no JSON (`categoriaId`, `fonteDestinoId`, `totalParcelas`); snake_case no banco. A conversão acontece nos models.
+- camelCase no JSON (`categoriaId`, `fonteDestinoId`, `totalParcelas`); snake_case no banco. A conversão acontece nos models.
 
 ### 4.2 Middlewares
 
@@ -246,11 +246,11 @@ LOGIN_JANELA_MIN=15
 | 0 | Fundação: estrutura, docker-compose, `schema.sql`, `executar.js`, `db.js`, `env.js`, middleware de erros, `server.js`, Vite + rotas vazias, `api.js`, `AuthContext` vazio, README inicial, `.gitignore`, `.env.example` | Gabriel | — |
 | 1 | Autenticação: cadastro, login, `/me`, `autenticar`, `validar`, limitadores, telas Login/Cadastro, `AuthContext`, `RotaProtegida`, Layout | Gabriel | 0 |
 | 2 | Categorias + fontes/destinos (API + telas) | Gabriel | 1 |
-| 3 | Lançamentos: CRUD, filtros, paginação, totais, parcelamento (API + tela) | Colega | 2 (pode começar models/funções puras após o 0) |
-| 4 | Seed de demonstração | Colega | 3 |
-| 5 | Relatório por categoria (RF7) + Dashboard | Colega | 3 |
+| 3 | Lançamentos: CRUD, filtros, paginação, totais, parcelamento (API + tela) | João Vitor | 2 (pode começar models/funções puras após o 0) |
+| 4 | Seed de demonstração | João Vitor | 3 |
+| 5 | Relatório por categoria (RF7) + Dashboard | João Vitor | 3 |
 | 6 | Relatório por fonte/destino (RF8) + Faturas (RF9) | Gabriel | 3 |
-| 7 | Saúde financeira (desafio) | Colega | 5, 6 |
+| 7 | Saúde financeira (desafio) | João Vitor | 5, 6 |
 | 8 | Acabamento: testes de API/isolamento, checklist final, README final, ensaio da apresentação | Ambos | todos |
 
 Cada integrante apresenta e explica os próprios PRs.
