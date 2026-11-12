@@ -135,3 +135,30 @@ test('emTransacao confirma e devolve o retorno', async () => {
 test('schema.sql pode ser executado duas vezes', async () => {
   await executarSql('database/schema.sql');
 });
+
+test('conexão ociosa derrubada pelo banco não derruba a API', async () => {
+  // Duas conexões ao mesmo tempo: a primeira volta ociosa ao pool e a segunda a encerra.
+  const ociosa = await pool.connect();
+  const extra = await pool.connect();
+  const { rows } = await ociosa.query('SELECT pg_backend_pid() AS pid');
+  ociosa.release();
+  await extra.query('SELECT pg_terminate_backend($1)', [rows[0].pid]);
+  extra.release();
+  await new Promise((r) => setTimeout(r, 200));
+  const { rows: depois } = await consultar('SELECT 1 AS ok');
+  assert.equal(depois[0].ok, 1);
+});
+
+test('conexão derrubada no meio da transação rejeita e a API continua', async () => {
+  await assert.rejects(
+    emTransacao(async (cliente) => {
+      const { rows } = await cliente.query('SELECT pg_backend_pid() AS pid');
+      await consultar('SELECT pg_terminate_backend($1)', [rows[0].pid]);
+      await cliente.query('SELECT 1');
+    }),
+    /terminat/i,
+  );
+  await new Promise((r) => setTimeout(r, 200));
+  const { rows } = await consultar('SELECT 1 AS ok');
+  assert.equal(rows[0].ok, 1);
+});

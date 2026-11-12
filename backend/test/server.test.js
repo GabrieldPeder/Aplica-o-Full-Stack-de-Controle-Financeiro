@@ -44,3 +44,13 @@ test('CORS libera só a origem configurada', async () => {
   const bloqueada = await fetch(`${base}/api/status`, { headers: { Origin: 'http://malicioso.com' } });
   assert.equal(bloqueada.headers.get('access-control-allow-origin'), null);
 });
+
+test('corpo acima de 100 kB responde 413', async () => {
+  const resposta = await fetch(`${base}/api/status`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ texto: 'x'.repeat(200 * 1024) }),
+  });
+  assert.equal(resposta.status, 413);
+  assert.deepEqual(await resposta.json(), { erro: 'Corpo da requisição muito grande.' });
+});

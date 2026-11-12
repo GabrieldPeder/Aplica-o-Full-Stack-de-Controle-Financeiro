@@ -110,3 +110,37 @@ test('rota inexistente vira 404', () => {
   assert.equal(res.statusCode, 404);
   assert.deepEqual(res.body, { erro: 'Rota não encontrada.' });
 });
+
+for (const code of ['22003', '22007', '22008']) {
+  test(`parâmetro fora do intervalo ou data inválida (${code}) vira 400`, () => {
+    const res = tratar({ code });
+    assert.equal(res.statusCode, 400);
+    assert.deepEqual(res.body, { erro: 'Parâmetro inválido.' });
+  });
+}
+
+for (const code of ['23514', '23502']) {
+  test(`violação de CHECK/NOT NULL (${code}) vira 400`, () => {
+    const res = tratar({ code });
+    assert.equal(res.statusCode, 400);
+    assert.deepEqual(res.body, { erro: 'Dados inválidos.' });
+  });
+}
+
+test('corpo grande demais vira 413', () => {
+  const res = tratar({ type: 'entity.too.large', status: 413, expose: true });
+  assert.equal(res.statusCode, 413);
+  assert.deepEqual(res.body, { erro: 'Corpo da requisição muito grande.' });
+});
+
+test('charset não suportado vira 415', () => {
+  const res = tratar({ type: 'charset.unsupported', status: 415, expose: true });
+  assert.equal(res.statusCode, 415);
+  assert.deepEqual(res.body, { erro: 'Tipo de conteúdo não suportado.' });
+});
+
+test('outro erro 4xx do Express mantém o status', () => {
+  const res = tratar({ type: 'request.aborted', status: 400, expose: true });
+  assert.equal(res.statusCode, 400);
+  assert.deepEqual(res.body, { erro: 'Requisição inválida.' });
+});

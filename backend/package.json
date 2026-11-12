@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "test": "node --test \"test/**/*.test.js\"",
+    "test": "node --test --test-concurrency=1 \"test/**/*.test.js\"",
     "db:criar": "node database/executar.js database/schema.sql",
     "db:teste": "node database/executar.js database/schema.sql --teste"
   },
