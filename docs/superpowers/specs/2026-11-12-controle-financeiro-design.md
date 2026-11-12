@@ -1,24 +1,12 @@
 # Especificação — Projeto 2: Aplicação Full Stack de Controle Financeiro
 
 - **Data:** 2026-11-12
-- **Grupo:** Gabriel de Peder + colega (2 integrantes)
+- **Grupo:** Gabriel de Peder / João Vitor Antoniel
 - **Enunciado:** https://costasilvati.github.io/fullStack/projeto-2.html (fonte: `costasilvati/fullStack/08-projeto-2-controle-financeiro.Rmd`)
-- **Meta:** 100 pontos + 10 do desafio (saúde financeira)
 
-Este documento registra as decisões do grupo. Onde ele não fala nada, vale o enunciado.
+Este documento registra as decisões do grupo.
 
 ---
-
-## 1. Entendimento e restrições
-
-**O que o enunciado exige (não negociável):**
-
-- Back-end Node.js + Express; front-end React (Vite); banco com persistência real; autenticação JWT; senhas com bcrypt.
-- `backend/src/` contém **somente** `server.js`, `routes/`, `models/`, `middlewares/`, `config/`. Controladores ficam nos arquivos de rotas (sem pasta `controllers`). Acesso ao banco **só** em `models/`.
-- `frontend/src/` contém **somente** `components/`, `contexts/` e `services/` (regras do Projeto 1 + `services/`), além de `main.jsx`/`App.jsx`.
-- Commits incrementais dos dois integrantes; cada integrante responsável por uma parte bem definida; ambos capazes de explicar qualquer trecho.
-- Uso de IA documentado no README (regra do Projeto 1).
-- Repositório público (já está).
 
 **Decisões do grupo:**
 
@@ -31,10 +19,6 @@ Este documento registra as decisões do grupo. Onde ele não fala nada, vale o e
 | Testes | Runner nativo `node:test` + `assert` + `fetch` nativo (sem dependência extra) |
 | Postgres local | `backend/docker-compose.yml` (alternativa: Postgres instalado, documentada no README) |
 | Estilo visual | CSS próprio (sem biblioteca de componentes) |
-
-**Comunicação ao professor (uma única mensagem, antes de começar):**
-
-> "Professor, nosso grupo vai usar PostgreSQL (driver `pg`) e a biblioteca Recharts para os gráficos. As demais dependências são as citadas no enunciado (Express, bcrypt, jsonwebtoken, dotenv, cors, express-rate-limit, React Router e Axios)."
 
 ---
 
@@ -273,7 +257,7 @@ Cada integrante apresenta e explica os próprios PRs.
 
 ---
 
-## 9. README (conteúdo obrigatório)
+## 9. README 
 
 Tecnologias; pré-requisitos; subir o Postgres (Docker ou local); configurar `.env` (back e front); `npm run db:criar` e `npm run db:seed`; subir back-end e front-end; usuários do seed; lista de rotas; decisões de projeto (utilitários em `config/`, data da compra nas parcelas, edição de parcelas, período anterior, limites do rate limit e das dicas de saúde financeira); divisão do trabalho por integrante; uso de ferramentas de IA.
 
