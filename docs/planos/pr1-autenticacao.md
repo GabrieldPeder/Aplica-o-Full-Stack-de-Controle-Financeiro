@@ -58,21 +58,21 @@ Cadastro, login e logout com JWT (RF1, RF2), o middleware que protege as rotas (
 **Arquivos:** `backend/src/config/cpf.js`, `backend/src/middlewares/validar.js`, `backend/src/config/env.js`, `.gitignore`
 **Testes:** `backend/test/config/cpf.test.js`, `backend/test/middlewares/validar.test.js`, `backend/test/config/env.test.js`
 
-- [ ] Testes do CPF: `529.982.247-25` válido; dígito errado; 11 dígitos iguais; tamanho errado; texto vazio.
-- [ ] Testes do `validar`: normaliza e guarda em `req.dados`/`req.filtros`/`req.parametros`; descarta campos extras; junta todos os erros em `campos` com status 400 e `erro: 'Dados inválidos.'`; cada regra pronta (obrigatório, tamanho, e-mail, CPF, senha fraca, confirmação diferente, `umDe`, `inteiro` com limites e padrão, `dinheiro` com 3 casas ou zero, `booleano`, `quando`).
-- [ ] Teste do `env.js`: `JWT_SECRET=troque-este-segredo` é recusado fora do modo de teste.
-- [ ] Ver falharem, implementar, ver passarem.
-- [ ] Ajustes do PR 0: `.env` lido de `backend/.env` independente da pasta atual; `.gitignore` cobre `.env*` (menos `.env.example`).
-- [ ] Commit: `feat: validação de CPF e middleware validar`
+- [x] Testes do CPF: `529.982.247-25` válido; dígito errado; 11 dígitos iguais; tamanho errado; texto vazio.
+- [x] Testes do `validar`: normaliza e guarda em `req.dados`/`req.filtros`/`req.parametros`; descarta campos extras; junta todos os erros em `campos` com status 400 e `erro: 'Dados inválidos.'`; cada regra pronta (obrigatório, tamanho, e-mail, CPF, senha fraca, confirmação diferente, `umDe`, `inteiro` com limites e padrão, `dinheiro` com 3 casas ou zero, `booleano`, `quando`).
+- [x] Teste do `env.js`: `JWT_SECRET=troque-este-segredo` é recusado fora do modo de teste.
+- [x] Ver falharem, implementar, ver passarem.
+- [x] Ajustes do PR 0: `.env` lido de `backend/.env` independente da pasta atual; `.gitignore` cobre `.env*` (menos `.env.example`).
+- [x] Commit: `feat: validação de CPF e middleware validar`
 
 ## Tarefa 2 — Model de usuário
 
 **Arquivos:** `backend/src/models/usuario.js` · **Testes:** `backend/test/models/usuario.test.js`
 **Entrega:** `criarComPadroes({ nome, email, cpf, senha })`, `conferirCredenciais(email, senha)` → usuário ou `null`, `buscarPorId(id)`, `CATEGORIAS_PADRAO`, `FONTES_PADRAO`.
 
-- [ ] Testes: cria usuário sem devolver `senha_hash`; senha gravada em hash; 9 categorias e 2 fontes padrão; e-mail e/ou CPF repetidos → `ErroApi` 409 com os campos certos; se a criação dos padrões falhar, o usuário não fica gravado; credenciais certas/erradas/e-mail inexistente.
-- [ ] Ver falharem, implementar, ver passarem.
-- [ ] Commit: `feat: model de usuário com cadastro em transação`
+- [x] Testes: cria usuário sem devolver `senha_hash`; senha gravada em hash; 9 categorias e 2 fontes padrão; e-mail e/ou CPF repetidos → `ErroApi` 409 com os campos certos; se a criação dos padrões falhar, o usuário não fica gravado; credenciais certas/erradas/e-mail inexistente.
+- [x] Ver falharem, implementar, ver passarem.
+- [x] Commit: `feat: model de usuário com cadastro em transação`
 
 ## Tarefa 3 — Rotas de autenticação
 
@@ -85,17 +85,17 @@ Cadastro, login e logout com JWT (RF1, RF2), o middleware que protege as rotas (
 | POST | `/api/auth/login` | 200 `{ token, usuario }` · 400 · 401 · 429 |
 | GET | `/api/auth/me` | 200 `{ usuario }` · 401 |
 
-- [ ] Testes: cadastro completo; campos inválidos → 400 com todos os campos; duplicidades → 409; login certo devolve token que funciona no `/me`; senha errada e e-mail inexistente → mesma resposta 401; 6ª tentativa errada → 429; acerto não conta; `/me` sem token, com token adulterado, expirado ou de usuário excluído → 401; resposta nunca tem `senhaHash`/`senha_hash`.
-- [ ] Ver falharem, implementar, registrar em `server.js`, ver passarem.
-- [ ] README: rotas de autenticação.
-- [ ] Commit: `feat: rotas de cadastro, login e sessão`
+- [x] Testes: cadastro completo; campos inválidos → 400 com todos os campos; duplicidades → 409; login certo devolve token que funciona no `/me`; senha errada e e-mail inexistente → mesma resposta 401; 6ª tentativa errada → 429; acerto não conta; `/me` sem token, com token adulterado, expirado ou de usuário excluído → 401; resposta nunca tem `senhaHash`/`senha_hash`.
+- [x] Ver falharem, implementar, registrar em `server.js`, ver passarem.
+- [x] README: rotas de autenticação.
+- [x] Commit: `feat: rotas de cadastro, login e sessão`
 
 ## Tarefa 4 — Front-end
 
 **Arquivos:** `contexts/AuthContext.jsx`, `components/layout/{RotaProtegida,Layout}.jsx`, `components/paginas/{Login,Cadastro}.jsx`, `components/comuns/{CampoTexto,CampoCpf,MensagemErro,Carregando}.jsx`, `services/formatar.js`, `App.jsx`, `index.css`
 
-- [ ] `AuthContext`: `login(email, senha)`, `cadastrar(dados)` (cadastra e já entra), `logout()`, `carregando`. Ao abrir com token salvo, confere com `GET /auth/me`. O `login` atualiza o token na hora, antes de qualquer requisição.
-- [ ] `Login` e `Cadastro`: validação no navegador antes de enviar; erros do servidor embaixo de cada campo; mensagem do 429; máscara de CPF; botão desabilitado enquanto envia.
-- [ ] `RotaProtegida` (sem sessão → `/login`) e `Layout` (menu lateral com todas as páginas da especificação, nome do usuário e Sair). Logado em `/login` → vai para `/`.
-- [ ] Conferir: `npm run lint` e `npm run build` limpos; no navegador: cadastrar, ver erro de CPF repetido no campo certo, sair, entrar, recarregar e continuar logado, token corrompido volta ao login.
-- [ ] Commit: `feat: telas de login e cadastro, rotas protegidas e menu`
+- [x] `AuthContext`: `login(email, senha)`, `cadastrar(dados)` (cadastra e já entra), `logout()`, `carregando`. Ao abrir com token salvo, confere com `GET /auth/me`. O `login` atualiza o token na hora, antes de qualquer requisição.
+- [x] `Login` e `Cadastro`: validação no navegador antes de enviar; erros do servidor embaixo de cada campo; mensagem do 429; máscara de CPF; botão desabilitado enquanto envia.
+- [x] `RotaProtegida` (sem sessão → `/login`) e `Layout` (menu lateral com todas as páginas da especificação, nome do usuário e Sair). Logado em `/login` → vai para `/`.
+- [x] Conferir: `npm run lint` e `npm run build` limpos; no navegador: cadastrar, ver erro de CPF repetido no campo certo, sair, entrar, recarregar e continuar logado, token corrompido volta ao login.
+- [x] Commit: `feat: telas de login e cadastro, rotas protegidas e menu`
