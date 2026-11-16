@@ -12,3 +12,10 @@ export function mascaraCpf(texto) {
     .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
     .replace(/\.(\d{3})(\d{1,2})$/, '.$1-$2');
 }
+
+const FORMATO_REAL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+// 1500.5 → 'R$ 1.500,50'
+export function moeda(valor) {
+  return FORMATO_REAL.format(Number(valor ?? 0));
+}
