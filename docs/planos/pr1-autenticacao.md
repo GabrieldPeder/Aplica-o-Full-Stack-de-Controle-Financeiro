@@ -19,7 +19,8 @@ Cadastro, login e logout com JWT (RF1, RF2), o middleware que protege as rotas (
 - `middlewares/validar.js`: `validar({ body, query, params })` + as regras prontas (`texto`, `email`, `cpf`, `senha`, `igualA`, `umDe`, `inteiro`, `dinheiro`, `booleano`, `quando`). Respondem 400 com **todos** os campos errados de uma vez.
 - `middlewares/autenticar.js`: lê `Authorization: Bearer <token>` e coloca o id do usuário em `req.usuarioId`.
 - `models/usuario.js`: cadastro (usuário + categorias e fontes padrão numa transação), conferência de senha e busca por id.
-- `routes/auth.js`: `criarRotasAuth()` monta as rotas com seus limitadores de tentativas.
+- `middlewares/limitadores.js`: limitadores de tentativas de login e de cadastro.
+- `routes/auth.js`: `criarRotasAuth()` monta as rotas com limitadores novos.
 - Front-end: `AuthContext` com `login`, `cadastrar`, `logout` e `carregando`; páginas `Login` e `Cadastro`; `RotaProtegida` e `Layout`.
 
 **Tecnologias novas:** `bcrypt`, `jsonwebtoken`, `express-rate-limit` (todas citadas no enunciado).
@@ -99,3 +100,23 @@ Cadastro, login e logout com JWT (RF1, RF2), o middleware que protege as rotas (
 - [x] `RotaProtegida` (sem sessão → `/login`) e `Layout` (menu lateral com todas as páginas da especificação, nome do usuário e Sair). Logado em `/login` → vai para `/`.
 - [x] Conferir: `npm run lint` e `npm run build` limpos; no navegador: cadastrar, ver erro de CPF repetido no campo certo, sair, entrar, recarregar e continuar logado, token corrompido volta ao login.
 - [x] Commit: `feat: telas de login e cadastro, rotas protegidas e menu`
+
+---
+
+## Correções após a revisão
+
+- **Senha com espaços nas pontas:** o cadastro gravava a senha como digitada e o login cortava os espaços, então a conta ficava inacessível. Agora o login usa `senhaDigitada()`, que compara exatamente o que foi digitado.
+- **`booleano()` na query string:** passou a aceitar `'true'`/`'false'`, necessário para `DELETE /api/lancamentos/:id?todasParcelas=true` (PR 3).
+- **Limite de 72 bytes do bcrypt:** senhas acima de 72 bytes (acentos contam 2) são recusadas no cadastro, no login e na tela, em vez de serem cortadas sem aviso.
+- **Token sem id numérico:** responde 401 em vez de chegar aos models.
+- **Padrão calculado:** `padrao` das regras aceita uma função (ex.: mês corrente nos filtros do PR 3).
+- **Limitadores:** saíram de `routes/auth.js` para `middlewares/limitadores.js`, como está na especificação.
+
+## Pendências menores
+
+- As regras `inteiro()` e `dinheiro()` aceitam `true` e textos como `'0x10'` (viram 1 e 16). Os models conferem a posse de cada id, então não há vazamento, mas a mensagem de erro fica menos clara.
+- `texto()` com número ou lista responde "Campo obrigatório." em vez de "Valor inválido.".
+- Se a API estiver fora do ar quando a página recarrega, o token salvo é apagado e é preciso entrar de novo.
+- Se o cadastro der certo mas o login automático falhar (rede ou limite de tentativas), a tela de cadastro mostra o erro do login.
+- O limite de 10 cadastros por hora vale por IP e fica em memória; no ensaio da apresentação, reiniciar o servidor zera o contador.
+- `JWT_EXPIRA` sem unidade (`3600`) é lido em milissegundos; usar `1h`.

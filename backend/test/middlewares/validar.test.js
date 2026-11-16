@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  validar, texto, email, cpf, senha, igualA, umDe, inteiro, dinheiro, booleano, quando,
+  validar, texto, email, cpf, senha, senhaDigitada, igualA, umDe, inteiro, dinheiro, booleano, quando,
 } from '../../src/middlewares/validar.js';
 
 // Executa o middleware com uma requisição falsa e devolve o que aconteceu.
@@ -120,4 +120,34 @@ test('quando: aplica a regra só se a condição valer, senão grava null', () =
   assert.deepEqual(r(10, { tipo: 'conta' }), { valor: null });
   assert.deepEqual(r(undefined, { tipo: 'cartao_credito' }), { erro: 'Campo obrigatório.' });
   assert.deepEqual(r('10', { tipo: 'cartao_credito' }), { valor: 10 });
+});
+
+test('booleano aceita "true"/"false" vindos da query string', () => {
+  assert.deepEqual(regra(booleano({ padrao: false }), 'true'), { valor: true });
+  assert.deepEqual(regra(booleano({ padrao: false }), 'false'), { valor: false });
+  const { req } = executar({ query: { todasParcelas: booleano({ padrao: false }) } }, { query: { todasParcelas: 'true' } });
+  assert.deepEqual(req.filtros, { todasParcelas: true });
+});
+
+test('senha: no máximo 72 bytes (limite do bcrypt), contando acentos', () => {
+  assert.deepEqual(regra(senha(), `${'ç'.repeat(36)}a1`), {
+    erro: 'A senha pode ter no máximo 72 caracteres (menos se tiver acentos).',
+  });
+  assert.deepEqual(regra(senha(), `${'a'.repeat(70)}1b`), { valor: `${'a'.repeat(70)}1b` });
+});
+
+test('senhaDigitada: não corta espaços e respeita os 72 bytes', () => {
+  assert.deepEqual(regra(senhaDigitada(), ' segura123 '), { valor: ' segura123 ' });
+  assert.deepEqual(regra(senhaDigitada(), ''), { erro: 'Campo obrigatório.' });
+  assert.deepEqual(regra(senhaDigitada(), 'ç'.repeat(37)), {
+    erro: 'A senha pode ter no máximo 72 caracteres (menos se tiver acentos).',
+  });
+});
+
+test('padrão pode ser uma função, calculada a cada requisição', () => {
+  let chamadas = 0;
+  const r = texto({ padrao: () => `valor ${++chamadas}` });
+  assert.deepEqual(regra(r, undefined), { valor: 'valor 1' });
+  assert.deepEqual(regra(r, undefined), { valor: 'valor 2' });
+  assert.deepEqual(regra(inteiro({ padrao: () => 7 }), ''), { valor: 7 });
 });

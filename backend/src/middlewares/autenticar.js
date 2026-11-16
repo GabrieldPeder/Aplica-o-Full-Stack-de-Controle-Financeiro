@@ -13,10 +13,12 @@ export function autenticar(req, res, next) {
   }
   try {
     const payload = jwt.verify(token, config.jwtSecret);
-    req.usuarioId = Number(payload.sub);
+    const usuarioId = Number(payload.sub);
+    if (!Number.isInteger(usuarioId) || usuarioId < 1) throw new Error('token sem id de usuário');
+    req.usuarioId = usuarioId;
     next();
   } catch {
-    next(new ErroApi(401, SESSAO_INVALIDA)); // assinatura errada, token expirado ou malformado
+    next(new ErroApi(401, SESSAO_INVALIDA)); // assinatura errada, expirado, malformado ou sem id
   }
 }
 

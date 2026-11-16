@@ -15,7 +15,9 @@ function validar(dados) {
   if (!dados.nome.trim()) erros.nome = 'Informe o nome.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email.trim())) erros.email = 'E-mail inválido.';
   if (somenteDigitos(dados.cpf).length !== 11) erros.cpf = 'CPF inválido.';
-  if (dados.senha.length < 8 || !/[A-Za-z]/.test(dados.senha) || !/\d/.test(dados.senha)) {
+  if (new TextEncoder().encode(dados.senha).length > 72) {
+    erros.senha = 'A senha pode ter no máximo 72 caracteres (menos se tiver acentos).';
+  } else if (dados.senha.length < 8 || !/[A-Za-z]/.test(dados.senha) || !/\d/.test(dados.senha)) {
     erros.senha = 'A senha deve ter pelo menos 8 caracteres, com letras e números.';
   }
   if (dados.confirmacaoSenha !== dados.senha) erros.confirmacaoSenha = 'As senhas não conferem.';

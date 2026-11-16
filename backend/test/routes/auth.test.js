@@ -112,6 +112,25 @@ test('/me com token adulterado, expirado ou de usuário excluído responde 401',
   }
 });
 
+test('senha com espaços nas pontas funciona no login', async () => {
+  const corpo = cadastro({ email: 'espacos@email.com', cpf: '11144477735', senha: ' segura123 ', confirmacaoSenha: ' segura123 ' });
+  assert.equal((await chamar('POST', '/auth/cadastro', { corpo })).status, 201);
+  const certo = await chamar('POST', '/auth/login', { corpo: { email: 'espacos@email.com', senha: ' segura123 ' } });
+  assert.equal(certo.status, 200);
+  const semEspacos = await chamar('POST', '/auth/login', { corpo: { email: 'espacos@email.com', senha: 'segura123' } });
+  assert.equal(semEspacos.status, 401);
+});
+
+test('token sem id numérico responde 401', async () => {
+  for (const subject of ['abc', '0', '-3']) {
+    const token = jwt.sign({}, config.jwtSecret, { subject });
+    const r = await chamar('GET', '/auth/me', { token });
+    assert.equal(r.status, 401, `sub=${subject}`);
+  }
+  const semSub = jwt.sign({ outro: 1 }, config.jwtSecret);
+  assert.equal((await chamar('GET', '/auth/me', { token: semSub })).status, 401);
+});
+
 test('6ª tentativa errada responde 429 e acertos não contam', async () => {
   // Servidor próprio: contador de tentativas zerado.
   const outro = criarApp().listen(0);
