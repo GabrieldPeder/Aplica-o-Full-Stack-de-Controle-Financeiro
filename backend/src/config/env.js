@@ -1,7 +1,11 @@
 // Lê e valida as variáveis de ambiente (arquivo backend/.env).
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'node:url';
 
-dotenv.config({ quiet: true });
+// Sempre backend/.env, mesmo que o comando seja executado de outra pasta.
+dotenv.config({ path: fileURLToPath(new URL('../../.env', import.meta.url)), quiet: true });
+
+const SEGREDO_DE_EXEMPLO = 'troque-este-segredo';
 
 export function carregarConfig(env) {
   const emTeste = env.NODE_ENV === 'test';
@@ -14,6 +18,10 @@ export function carregarConfig(env) {
       `Variáveis de ambiente ausentes: ${ausentes.join(', ')}. ` +
         'Copie backend/.env.example para backend/.env e preencha.',
     );
+  }
+
+  if (!emTeste && env.JWT_SECRET === SEGREDO_DE_EXEMPLO) {
+    throw new Error('JWT_SECRET ainda é o valor de exemplo. Troque por um texto longo e aleatório no backend/.env.');
   }
 
   return {
