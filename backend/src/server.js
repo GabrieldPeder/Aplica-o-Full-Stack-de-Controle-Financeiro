@@ -4,6 +4,7 @@ import cors from 'cors';
 import { pathToFileURL } from 'node:url';
 import { config } from './config/env.js';
 import { rotaNaoEncontrada, tratarErros } from './middlewares/erros.js';
+import { criarRotasAuth } from './routes/auth.js';
 
 export function criarApp() {
   const app = express();
@@ -16,7 +17,8 @@ export function criarApp() {
     res.json({ status: 'ok' });
   });
 
-  // rotas dos próximos PRs: app.use('/api/auth', authRoutes) etc.
+  app.use('/api/auth', criarRotasAuth());
+  // rotas dos próximos PRs entram aqui, protegidas: app.use('/api/categorias', autenticar, rotasCategorias)
 
   app.use(rotaNaoEncontrada);
   app.use(tratarErros);
