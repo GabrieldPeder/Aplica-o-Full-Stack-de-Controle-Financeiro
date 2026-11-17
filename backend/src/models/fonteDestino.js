@@ -1,6 +1,6 @@
 // Acesso ao banco para fontes e destinos de dinheiro (RF5): renda, conta e cartão de crédito.
 // Toda função recebe usuarioId como 1º parâmetro e filtra por ele (RF3).
-import { consultar } from '../config/db.js';
+import { consultar, emTransacao } from '../config/db.js';
 import { ErroApi } from '../middlewares/erros.js';
 
 const NAO_ENCONTRADA = 'Fonte/destino não encontrada.';
@@ -56,20 +56,32 @@ export async function criar(usuarioId, dados) {
   return buscar(usuarioId, rows[0].id);
 }
 
+// Em transação, travando a linha (FOR UPDATE), pelo mesmo motivo de categoria.atualizar.
 export async function atualizar(usuarioId, id, dados) {
-  const atual = await buscar(usuarioId, id);
-  if (!atual) throw new ErroApi(404, NAO_ENCONTRADA);
-  if (dados.tipo !== atual.tipo && atual.quantidadeLancamentos > 0) {
-    throw new ErroApi(409, 'Não é possível mudar o tipo.', {
-      tipo: 'Já existem lançamentos aqui; o tipo não pode ser alterado.',
-    });
-  }
-  await consultar(
-    `UPDATE fontes_destinos
-     SET nome = $3, tipo = $4, dia_fechamento = $5, dia_vencimento = $6, limite = $7, reserva = $8
-     WHERE usuario_id = $1 AND id = $2`,
-    [usuarioId, id, ...normalizar(dados)],
-  );
+  await emTransacao(async (cliente) => {
+    const { rows } = await cliente.query(
+      'SELECT tipo FROM fontes_destinos WHERE usuario_id = $1 AND id = $2 FOR UPDATE',
+      [usuarioId, id],
+    );
+    if (rows.length === 0) throw new ErroApi(404, NAO_ENCONTRADA);
+    if (dados.tipo !== rows[0].tipo) {
+      const { rows: [{ n }] } = await cliente.query(
+        'SELECT count(*)::int AS n FROM lancamentos WHERE fonte_destino_id = $1',
+        [id],
+      );
+      if (n > 0) {
+        throw new ErroApi(409, 'Não é possível mudar o tipo.', {
+          tipo: 'Já existem lançamentos aqui; o tipo não pode ser alterado.',
+        });
+      }
+    }
+    await cliente.query(
+      `UPDATE fontes_destinos
+       SET nome = $3, tipo = $4, dia_fechamento = $5, dia_vencimento = $6, limite = $7, reserva = $8
+       WHERE usuario_id = $1 AND id = $2`,
+      [usuarioId, id, ...normalizar(dados)],
+    );
+  });
   return buscar(usuarioId, id);
 }
 

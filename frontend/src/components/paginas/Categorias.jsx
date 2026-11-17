@@ -92,9 +92,9 @@ export default function Categorias() {
             opcoes={TIPOS}
             erro={erros.tipo}
             disabled={emUso}
-            title={emUso ? 'A categoria já tem lançamentos; só o nome pode ser alterado.' : undefined}
           />
         </div>
+        {emUso && <p className="detalhe">A categoria já tem lançamentos; só o nome pode ser alterado.</p>}
         <div className="acoes">
           {editando && (
             <button type="button" className="botao-secundario" onClick={limparFormulario}>
@@ -149,12 +149,18 @@ export default function Categorias() {
 
       {paraExcluir && (
         <ConfirmarExclusao
-          mensagem={`Excluir a categoria "${paraExcluir.nome}"?`}
+          mensagem={
+            paraExcluir.quantidadeLancamentos > 0
+              ? `A categoria "${paraExcluir.nome}" tem ${paraExcluir.quantidadeLancamentos} lançamento(s) e não pode ser excluída. Exclua ou altere esses lançamentos antes.`
+              : `Excluir a categoria "${paraExcluir.nome}"?`
+          }
           erro={erroExclusao}
           excluindo={excluindo}
           aoConfirmar={excluir}
           aoCancelar={() => setParaExcluir(null)}
-        />
+        >
+          {paraExcluir.quantidadeLancamentos > 0 ? <></> : undefined}
+        </ConfirmarExclusao>
       )}
     </section>
   );

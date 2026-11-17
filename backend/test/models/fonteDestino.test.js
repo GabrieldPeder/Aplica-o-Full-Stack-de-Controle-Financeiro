@@ -115,3 +115,30 @@ test('excluir apaga; com lançamento o banco barra (23503)', async () => {
   await criarLancamento(u, c.id, usada.id);
   await assert.rejects(fonteDestino.excluir(u, usada.id), { code: '23503' });
 });
+
+test('nome repetido ignora maiúsculas/minúsculas → 23505', async () => {
+  const u = await criarUsuario();
+  await fonteDestino.criar(u, { nome: 'Conta corrente', tipo: 'conta' });
+  await assert.rejects(fonteDestino.criar(u, { nome: 'conta CORRENTE', tipo: 'renda' }), {
+    code: '23505', constraint: 'fontes_destinos_nome_unico',
+  });
+});
+
+test('mudar o tipo espera um lançamento em andamento e então recusa (sem corrida)', async () => {
+  const u = await criarUsuario();
+  const f = await fonteDestino.criar(u, cartao());
+  const c = await categoria.criar(u, { nome: 'Mercado', tipo: 'saida' });
+  const outra = await pool.connect();
+  await outra.query('BEGIN');
+  await outra.query(
+    `INSERT INTO lancamentos (usuario_id, tipo, descricao, valor, data, categoria_id, fonte_destino_id)
+     VALUES ($1, 'saida', 'Em andamento', 10, '2026-11-03', $2, $3)`,
+    [u, c.id, f.id],
+  );
+  const mudanca = fonteDestino.atualizar(u, f.id, { nome: 'Nubank', tipo: 'conta' });
+  mudanca.catch(() => {});
+  await new Promise((r) => setTimeout(r, 300));
+  await outra.query('COMMIT');
+  outra.release();
+  await rejeitaApi(mudanca, 409, 'tipo');
+});

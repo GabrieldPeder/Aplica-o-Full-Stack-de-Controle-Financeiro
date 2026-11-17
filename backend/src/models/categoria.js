@@ -1,6 +1,6 @@
 // Acesso ao banco para categorias (RF4). Toda função recebe usuarioId como 1º parâmetro
 // e filtra por ele (RF3). Os dados chegam validados pelo middleware validar.
-import { consultar } from '../config/db.js';
+import { consultar, emTransacao } from '../config/db.js';
 import { ErroApi } from '../middlewares/erros.js';
 
 const NAO_ENCONTRADA = 'Categoria não encontrada.';
@@ -38,17 +38,30 @@ export async function criar(usuarioId, { nome, tipo }) {
   return buscar(usuarioId, rows[0].id);
 }
 
+// Em transação, travando a linha (FOR UPDATE): um lançamento sendo criado ao mesmo tempo
+// espera ou é esperado, então a contagem de lançamentos não fica desatualizada.
 export async function atualizar(usuarioId, id, { nome, tipo }) {
-  const atual = await buscar(usuarioId, id);
-  if (!atual) throw new ErroApi(404, NAO_ENCONTRADA);
-  if (tipo !== atual.tipo && atual.quantidadeLancamentos > 0) {
-    throw new ErroApi(409, 'Não é possível mudar o tipo.', {
-      tipo: 'A categoria já tem lançamentos; só o nome pode ser alterado.',
-    });
-  }
-  await consultar('UPDATE categorias SET nome = $3, tipo = $4 WHERE usuario_id = $1 AND id = $2', [
-    usuarioId, id, nome, tipo,
-  ]);
+  await emTransacao(async (cliente) => {
+    const { rows } = await cliente.query(
+      'SELECT tipo FROM categorias WHERE usuario_id = $1 AND id = $2 FOR UPDATE',
+      [usuarioId, id],
+    );
+    if (rows.length === 0) throw new ErroApi(404, NAO_ENCONTRADA);
+    if (tipo !== rows[0].tipo) {
+      const { rows: [{ n }] } = await cliente.query(
+        'SELECT count(*)::int AS n FROM lancamentos WHERE categoria_id = $1',
+        [id],
+      );
+      if (n > 0) {
+        throw new ErroApi(409, 'Não é possível mudar o tipo.', {
+          tipo: 'A categoria já tem lançamentos; só o nome pode ser alterado.',
+        });
+      }
+    }
+    await cliente.query('UPDATE categorias SET nome = $3, tipo = $4 WHERE usuario_id = $1 AND id = $2', [
+      usuarioId, id, nome, tipo,
+    ]);
+  });
   return buscar(usuarioId, id);
 }
 

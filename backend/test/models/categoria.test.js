@@ -92,3 +92,31 @@ test('excluir apaga; com lançamento o banco barra (23503)', async () => {
   await criarLancamento(u, usada.id, conta.id);
   await assert.rejects(categoria.excluir(u, usada.id), { code: '23503' });
 });
+
+test('nome repetido ignora maiúsculas/minúsculas → 23505', async () => {
+  const u = await criarUsuario();
+  await categoria.criar(u, { nome: 'Lazer', tipo: 'saida' });
+  await assert.rejects(categoria.criar(u, { nome: 'LAZER', tipo: 'saida' }), {
+    code: '23505', constraint: 'categorias_nome_unico',
+  });
+});
+
+test('mudar o tipo espera um lançamento em andamento e então recusa (sem corrida)', async () => {
+  const u = await criarUsuario();
+  const c = await categoria.criar(u, { nome: 'Mercado', tipo: 'saida' });
+  const conta = await fonteDestino.criar(u, { nome: 'Conta', tipo: 'conta' });
+  // Outra conexão insere um lançamento e ainda não confirmou.
+  const outra = await pool.connect();
+  await outra.query('BEGIN');
+  await outra.query(
+    `INSERT INTO lancamentos (usuario_id, tipo, descricao, valor, data, categoria_id, fonte_destino_id)
+     VALUES ($1, 'saida', 'Em andamento', 10, '2026-11-03', $2, $3)`,
+    [u, c.id, conta.id],
+  );
+  const mudanca = categoria.atualizar(u, c.id, { nome: 'Mercado', tipo: 'entrada' });
+  mudanca.catch(() => {}); // a rejeição é conferida abaixo
+  await new Promise((r) => setTimeout(r, 300));
+  await outra.query('COMMIT');
+  outra.release();
+  await rejeitaApi(mudanca, 409, 'tipo');
+});

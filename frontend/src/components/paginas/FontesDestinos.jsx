@@ -123,9 +123,9 @@ export default function FontesDestinos() {
             opcoes={TIPOS}
             erro={erros.tipo}
             disabled={emUso}
-            title={emUso ? 'Já existem lançamentos aqui; o tipo não pode ser alterado.' : undefined}
           />
         </div>
+        {emUso && <p className="detalhe">Já existem lançamentos aqui; o tipo não pode ser alterado.</p>}
 
         {ehCartao && (
           <div className="campos-linha">
@@ -202,12 +202,18 @@ export default function FontesDestinos() {
 
       {paraExcluir && (
         <ConfirmarExclusao
-          mensagem={`Excluir "${paraExcluir.nome}"?`}
+          mensagem={
+            paraExcluir.quantidadeLancamentos > 0
+              ? `"${paraExcluir.nome}" tem ${paraExcluir.quantidadeLancamentos} lançamento(s) e não pode ser excluída. Exclua ou altere esses lançamentos antes.`
+              : `Excluir "${paraExcluir.nome}"?`
+          }
           erro={erroExclusao}
           excluindo={excluindo}
           aoConfirmar={excluir}
           aoCancelar={() => setParaExcluir(null)}
-        />
+        >
+          {paraExcluir.quantidadeLancamentos > 0 ? <></> : undefined}
+        </ConfirmarExclusao>
       )}
     </section>
   );

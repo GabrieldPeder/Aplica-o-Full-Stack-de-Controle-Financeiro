@@ -89,3 +89,12 @@ test('excluir categoria com lançamento → 409', async () => {
   assert.equal(r.status, 409);
   assert.equal(r.corpo.erro, 'Não é possível excluir: existem lançamentos vinculados.');
 });
+
+test('renomear para um nome já existente (outra caixa) → 409 no campo nome', async () => {
+  const nova = await chamar(api.base, 'POST', '/categorias', { token: tokenA, corpo: { nome: 'Viagens', tipo: 'saida' } });
+  const r = await chamar(api.base, 'PUT', `/categorias/${nova.corpo.id}`, {
+    token: tokenA, corpo: { nome: 'educação', tipo: 'saida' },
+  });
+  assert.equal(r.status, 409);
+  assert.ok(r.corpo.campos.nome);
+});
