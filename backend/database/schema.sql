@@ -18,9 +18,11 @@ CREATE TABLE categorias (
   id          SERIAL PRIMARY KEY,
   usuario_id  INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
   nome        VARCHAR(60) NOT NULL,
-  tipo        VARCHAR(7)  NOT NULL CHECK (tipo IN ('entrada', 'saida')),
-  CONSTRAINT categorias_nome_unico UNIQUE (usuario_id, nome, tipo)
+  tipo        VARCHAR(7)  NOT NULL CHECK (tipo IN ('entrada', 'saida'))
 );
+
+-- Nome único por usuário e tipo, sem diferenciar maiúsculas ("Lazer" = "lazer").
+CREATE UNIQUE INDEX categorias_nome_unico ON categorias (usuario_id, lower(nome), tipo);
 
 CREATE TABLE fontes_destinos (
   id              SERIAL PRIMARY KEY,
@@ -31,10 +33,12 @@ CREATE TABLE fontes_destinos (
   dia_vencimento  SMALLINT CHECK (dia_vencimento BETWEEN 1 AND 31),
   limite          NUMERIC(12, 2) CHECK (limite IS NULL OR limite > 0),
   reserva         BOOLEAN NOT NULL DEFAULT FALSE,   -- usado na página de saúde financeira
-  CONSTRAINT fontes_destinos_nome_unico UNIQUE (usuario_id, nome),
   CHECK (tipo <> 'cartao_credito'
          OR (dia_fechamento IS NOT NULL AND dia_vencimento IS NOT NULL AND limite IS NOT NULL))
 );
+
+-- Nome único por usuário, sem diferenciar maiúsculas.
+CREATE UNIQUE INDEX fontes_destinos_nome_unico ON fontes_destinos (usuario_id, lower(nome));
 
 -- FKs de categoria e fonte/destino SEM cascade: excluir com lançamentos vinculados gera erro 23503 (-> 409)
 CREATE TABLE lancamentos (

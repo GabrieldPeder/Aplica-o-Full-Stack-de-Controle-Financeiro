@@ -125,8 +125,16 @@ Toda resposta de erro tem o formato:
 | `POST` | `/api/auth/cadastro` | Cadastra usuário (`nome`, `email`, `cpf`, `senha`, `confirmacaoSenha`) e cria categorias e fontes padrão |
 | `POST` | `/api/auth/login` | Devolve `{ token, usuario }`; limite de 5 tentativas erradas a cada 15 min |
 | `GET` | `/api/auth/me` | Dados do usuário do token |
+| `GET` | `/api/categorias` | Lista as categorias do usuário (com `quantidadeLancamentos`) |
+| `POST` | `/api/categorias` | Cria categoria (`nome`, `tipo`: `entrada` ou `saida`) |
+| `PUT` | `/api/categorias/:id` | Edita; o tipo só muda se não houver lançamentos |
+| `DELETE` | `/api/categorias/:id` | Exclui; 409 se houver lançamentos |
+| `GET` | `/api/fontes-destinos` | Lista fontes e destinos do usuário |
+| `POST` | `/api/fontes-destinos` | Cria (`nome`, `tipo`: `renda`, `conta` ou `cartao_credito`; cartão exige `diaFechamento`, `diaVencimento`, `limite`; conta aceita `reserva`) |
+| `PUT` | `/api/fontes-destinos/:id` | Edita; o tipo só muda se não houver lançamentos |
+| `DELETE` | `/api/fontes-destinos/:id` | Exclui; 409 se houver lançamentos |
 
-Rotas marcadas como protegidas exigem o cabeçalho `Authorization: Bearer <token>`.
+Todas as rotas, exceto `/api/status`, `/api/auth/cadastro` e `/api/auth/login`, exigem o cabeçalho `Authorization: Bearer <token>`.
 As demais rotas são adicionadas pelos próximos PRs (ver a especificação).
 
 ## Divisão do trabalho

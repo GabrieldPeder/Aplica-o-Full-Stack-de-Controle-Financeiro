@@ -4,7 +4,10 @@ import cors from 'cors';
 import { pathToFileURL } from 'node:url';
 import { config } from './config/env.js';
 import { rotaNaoEncontrada, tratarErros } from './middlewares/erros.js';
+import { autenticar } from './middlewares/autenticar.js';
 import { criarRotasAuth } from './routes/auth.js';
+import rotasCategorias from './routes/categorias.js';
+import rotasFontesDestinos from './routes/fontesDestinos.js';
 
 export function criarApp() {
   const app = express();
@@ -18,7 +21,9 @@ export function criarApp() {
   });
 
   app.use('/api/auth', criarRotasAuth());
-  // rotas dos próximos PRs entram aqui, protegidas: app.use('/api/categorias', autenticar, rotasCategorias)
+  // Daqui para baixo, todas as rotas exigem token (autenticar coloca req.usuarioId).
+  app.use('/api/categorias', autenticar, rotasCategorias);
+  app.use('/api/fontes-destinos', autenticar, rotasFontesDestinos);
 
   app.use(rotaNaoEncontrada);
   app.use(tratarErros);
