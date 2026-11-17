@@ -1,12 +1,28 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import RotaProtegida from './components/layout/RotaProtegida.jsx';
+import Layout from './components/layout/Layout.jsx';
+import Login from './components/paginas/Login.jsx';
+import Cadastro from './components/paginas/Cadastro.jsx';
 import EmConstrucao from './components/paginas/EmConstrucao.jsx';
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/login" element={<EmConstrucao titulo="Login" />} />
-      <Route path="/cadastro" element={<EmConstrucao titulo="Cadastro" />} />
-      <Route path="/" element={<EmConstrucao titulo="Dashboard" />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/cadastro" element={<Cadastro />} />
+
+      <Route element={<RotaProtegida />}>
+        <Route element={<Layout />}>
+          <Route path="/" element={<EmConstrucao titulo="Dashboard" />} />
+          <Route path="/lancamentos" element={<EmConstrucao titulo="Lançamentos" />} />
+          <Route path="/categorias" element={<EmConstrucao titulo="Categorias" />} />
+          <Route path="/fontes-destinos" element={<EmConstrucao titulo="Fontes e destinos" />} />
+          <Route path="/relatorios" element={<EmConstrucao titulo="Relatórios" />} />
+          <Route path="/faturas" element={<EmConstrucao titulo="Faturas" />} />
+          <Route path="/saude-financeira" element={<EmConstrucao titulo="Saúde financeira" />} />
+        </Route>
+      </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

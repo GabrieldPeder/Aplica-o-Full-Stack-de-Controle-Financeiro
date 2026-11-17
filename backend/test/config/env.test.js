@@ -24,3 +24,10 @@ test('em NODE_ENV=test usa DATABASE_URL_TESTE e a exige', () => {
   );
   assert.throws(() => carregarConfig({ ...base, NODE_ENV: 'test' }), /DATABASE_URL_TESTE/);
 });
+
+test('recusa o JWT_SECRET de exemplo fora dos testes', () => {
+  assert.throws(() => carregarConfig({ ...base, JWT_SECRET: 'troque-este-segredo' }), /JWT_SECRET.*\.env/s);
+  assert.doesNotThrow(() =>
+    carregarConfig({ ...base, JWT_SECRET: 'troque-este-segredo', NODE_ENV: 'test', DATABASE_URL_TESTE: 'postgres://t' }),
+  );
+});

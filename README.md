@@ -49,6 +49,7 @@ CREATE DATABASE financas_teste OWNER financas;
 ```bash
 cd backend
 cp .env.example .env          # no Windows (cmd): copy .env.example .env
+                              # depois troque JWT_SECRET no .env por um texto longo e aleatório
 npm install
 npm run db:criar              # cria as tabelas no banco de desenvolvimento
 npm run db:teste              # cria as tabelas no banco de testes
@@ -121,7 +122,11 @@ Toda resposta de erro tem o formato:
 | Método | Rota | Descrição |
 |---|---|---|
 | `GET` | `/api/status` | Verifica se a API está no ar |
+| `POST` | `/api/auth/cadastro` | Cadastra usuário (`nome`, `email`, `cpf`, `senha`, `confirmacaoSenha`) e cria categorias e fontes padrão |
+| `POST` | `/api/auth/login` | Devolve `{ token, usuario }`; limite de 5 tentativas erradas a cada 15 min |
+| `GET` | `/api/auth/me` | Dados do usuário do token |
 
+Rotas marcadas como protegidas exigem o cabeçalho `Authorization: Bearer <token>`.
 As demais rotas são adicionadas pelos próximos PRs (ver a especificação).
 
 ## Divisão do trabalho

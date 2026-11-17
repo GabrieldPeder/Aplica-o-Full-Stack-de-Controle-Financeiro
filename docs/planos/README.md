@@ -8,7 +8,7 @@ O plano de um PR só é escrito quando o PR vai começar, porque depende do que 
 | PR | Assunto | Responsável | Revisor | Plano | Situação |
 |---|---|---|---|---|---|
 | 0 | Fundação | Gabriel | João Vitor | [pr0-fundacao.md](pr0-fundacao.md) | Concluído (#2) |
-| 1 | Autenticação | Gabriel | João Vitor | — | A fazer |
+| 1 | Autenticação | Gabriel | João Vitor | [pr1-autenticacao.md](pr1-autenticacao.md) | Em revisão |
 | 2 | Categorias + fontes/destinos | Gabriel | João Vitor | — | A fazer |
 | 3 | Lançamentos e parcelamento | João Vitor | Gabriel | [pr3-lancamentos.md](pr3-lancamentos.md) | Em andamento |
 | 4 | Seed de demonstração | João Vitor | Gabriel | — | A fazer |
