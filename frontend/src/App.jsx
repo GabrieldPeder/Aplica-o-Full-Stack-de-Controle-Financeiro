@@ -4,6 +4,8 @@ import Layout from './components/layout/Layout.jsx';
 import Login from './components/paginas/Login.jsx';
 import Cadastro from './components/paginas/Cadastro.jsx';
 import EmConstrucao from './components/paginas/EmConstrucao.jsx';
+import Categorias from './components/paginas/Categorias.jsx';
+import FontesDestinos from './components/paginas/FontesDestinos.jsx';
 
 export default function App() {
   return (
@@ -15,8 +17,8 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<EmConstrucao titulo="Dashboard" />} />
           <Route path="/lancamentos" element={<EmConstrucao titulo="Lançamentos" />} />
-          <Route path="/categorias" element={<EmConstrucao titulo="Categorias" />} />
-          <Route path="/fontes-destinos" element={<EmConstrucao titulo="Fontes e destinos" />} />
+          <Route path="/categorias" element={<Categorias />} />
+          <Route path="/fontes-destinos" element={<FontesDestinos />} />
           <Route path="/relatorios" element={<EmConstrucao titulo="Relatórios" />} />
           <Route path="/faturas" element={<EmConstrucao titulo="Faturas" />} />
           <Route path="/saude-financeira" element={<EmConstrucao titulo="Saúde financeira" />} />

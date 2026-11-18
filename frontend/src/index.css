@@ -189,3 +189,138 @@ button:disabled {
     border-bottom: 1px solid var(--cor-borda);
   }
 }
+
+/* ---------- cartões, listas e tabelas ---------- */
+h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.cartao {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
+}
+
+.campos-linha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0 1rem;
+}
+
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.caixa-marcar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.colunas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0 1.5rem;
+}
+
+.lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.lista li:last-child {
+  border-bottom: none;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela th,
+.tabela td {
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid #eef0f3;
+  text-align: left;
+}
+
+.tabela th {
+  font-size: 0.85rem;
+  color: var(--cor-suave);
+}
+
+.detalhe {
+  color: var(--cor-suave);
+  font-size: 0.9rem;
+}
+
+.lista-vazia {
+  color: var(--cor-suave);
+}
+
+.acoes-item {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.botao-link {
+  padding: 0.2rem 0.5rem;
+  background: transparent;
+  color: var(--cor-primaria);
+  font-weight: 500;
+}
+
+.botao-link:hover:not(:disabled) {
+  background: #eff6ff;
+}
+
+.botao-link.perigo,
+.botao-perigo {
+  color: var(--cor-erro);
+}
+
+.botao-link.perigo:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.botao-perigo {
+  background: var(--cor-erro);
+  color: #fff;
+}
+
+.botao-perigo:hover:not(:disabled) {
+  background: #991b1b;
+}
+
+/* ---------- confirmação ---------- */
+.fundo-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(0 0 0 / 35%);
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.5rem;
+  border-radius: 10px;
+  background: #fff;
+}
