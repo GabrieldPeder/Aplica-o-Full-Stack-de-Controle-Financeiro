@@ -8,6 +8,7 @@
 //
 // Uma regra é uma função (valor, corpoOriginal) => ({ valor }) ou ({ erro: 'mensagem' }).
 import { cpfValido, somenteDigitos } from '../config/cpf.js';
+import { dataValida } from '../config/datas.js';
 
 const OBRIGATORIO = 'Campo obrigatório.';
 const MAIOR_INTEIRO = 2147483647; // limite do tipo INTEGER do PostgreSQL
@@ -150,6 +151,19 @@ export function dinheiro({ opcional = false } = {}) {
       return { erro: 'Informe um valor maior que zero, com até 2 casas decimais.' };
     }
     return { valor: numero };
+  };
+}
+
+// Data 'AAAA-MM-DD' que existe no calendário.
+export function data({ opcional = false, padrao } = {}) {
+  return (valor) => {
+    if (vazio(valor)) {
+      if (padrao !== undefined) return { valor: valorPadrao(padrao) };
+      return opcional ? { valor: null } : { erro: OBRIGATORIO };
+    }
+    const limpo = String(valor).trim();
+    if (!dataValida(limpo)) return { erro: 'Informe uma data válida (AAAA-MM-DD).' };
+    return { valor: limpo };
   };
 }
 

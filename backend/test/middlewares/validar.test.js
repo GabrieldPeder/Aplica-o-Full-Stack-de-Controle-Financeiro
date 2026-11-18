@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  validar, texto, email, cpf, senha, senhaDigitada, igualA, umDe, inteiro, dinheiro, booleano, quando,
+  validar, texto, email, cpf, senha, senhaDigitada, igualA, umDe, inteiro, dinheiro, booleano, quando, data,
 } from '../../src/middlewares/validar.js';
 
 // Executa o middleware com uma requisição falsa e devolve o que aconteceu.
@@ -150,4 +150,13 @@ test('padrão pode ser uma função, calculada a cada requisição', () => {
   assert.deepEqual(regra(r, undefined), { valor: 'valor 1' });
   assert.deepEqual(regra(r, undefined), { valor: 'valor 2' });
   assert.deepEqual(regra(inteiro({ padrao: () => 7 }), ''), { valor: 7 });
+});
+
+test('data: aceita AAAA-MM-DD existente e usa o padrão', () => {
+  const msg = 'Informe uma data válida (AAAA-MM-DD).';
+  assert.deepEqual(regra(data(), ' 2026-11-03 '), { valor: '2026-11-03' });
+  assert.deepEqual(regra(data(), '2026-02-30'), { erro: msg });
+  assert.deepEqual(regra(data(), '03/11/2026'), { erro: msg });
+  assert.deepEqual(regra(data(), undefined), { erro: 'Campo obrigatório.' });
+  assert.deepEqual(regra(data({ padrao: () => '2026-11-01' }), undefined), { valor: '2026-11-01' });
 });
