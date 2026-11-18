@@ -114,6 +114,7 @@ frontend/src/
 - Todas as parcelas de uma compra guardam a **data da compra**. A fatura de cada parcela é calculada por `calcularFatura(data, cartão, parcela)` (`backend/src/config/datas.js`, implementação de referência do enunciado). Assim, mudar o dia de fechamento de um cartão recalcula todas as faturas.
 - Por isso os relatórios por período (RF7, RF8) contam uma compra parcelada inteira no mês em que foi feita; só a tela de faturas distribui as parcelas pelos meses.
 - A fatura atual é aquela em que cairia uma compra feita hoje (horário de Brasília). Uma compra no dia do fechamento já vai para a fatura seguinte.
+- Entre o fechamento e o vencimento, a fatura que acabou de fechar aparece antes da atual como "A pagar".
 - Limite utilizado = soma de todas as parcelas com vencimento hoje ou depois.
 
 ## Padrão de erros da API

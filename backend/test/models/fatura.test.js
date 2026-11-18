@@ -55,6 +55,7 @@ test('fatura atual e as próximas 3, inclusive vazias, com os itens e parcelas c
     ['2027-03', 0, []],
   ]);
   assert.deepEqual(cartao.faturas.map((f) => f.atual), [true, false, false, false]);
+  assert.deepEqual(cartao.faturas.map((f) => f.situacao), ['aberta', 'futura', 'futura', 'futura']);
   assert.deepEqual(
     { fechamento: cartao.faturas[0].fechamento, vencimento: cartao.faturas[0].vencimento },
     { fechamento: '2026-12-03', vencimento: '2026-12-10' },
@@ -88,10 +89,12 @@ test('cartão sem lançamentos: faturas vazias e limite todo disponível', async
   assert.equal(cartao.limiteDisponivel, 2000);
 });
 
-test('no dia do fechamento, a fatura atual já é a seguinte', async () => {
+test('no dia do fechamento, a fatura atual já é a seguinte (a que fechou vira "fechada")', async () => {
   const { cartoes } = await fatura.previsao(u, { meses: 1, hoje: '2026-12-03' });
   const cartao = cartoes.find((c) => c.nome === 'Nubank');
-  assert.deepEqual(cartao.faturas.map((f) => f.referencia), ['2027-01', '2027-02']);
+  assert.deepEqual(cartao.faturas.map((f) => [f.referencia, f.situacao]), [
+    ['2026-12', 'fechada'], ['2027-01', 'aberta'], ['2027-02', 'futura'],
+  ]);
 });
 
 test('lista só cartões de crédito, em ordem de nome', async () => {
@@ -107,6 +110,23 @@ test('limite estourado fica negativo', async () => {
   const depois = (await fatura.previsao(u, { meses: 3, hoje: HOJE })).cartoes.find((c) => c.nome === 'Visa');
   assert.equal(cartao.limiteDisponivel, 50);
   assert.equal(depois.limiteDisponivel, -50);
+});
+
+test('entre o fechamento e o vencimento, a fatura fechada aparece antes da atual', async () => {
+  // 05/11: a fatura de 11/2026 fechou em 03/11 e vence em 10/11.
+  const { cartoes } = await fatura.previsao(u, { meses: 3, hoje: '2026-11-05' });
+  const cartao = cartoes.find((c) => c.nome === 'Nubank');
+  assert.deepEqual(cartao.faturas.map((f) => [f.referencia, f.situacao, f.atual]), [
+    ['2026-11', 'fechada', false],
+    ['2026-12', 'aberta', true],
+    ['2027-01', 'futura', false],
+    ['2027-02', 'futura', false],
+    ['2027-03', 'futura', false],
+  ]);
+  assert.deepEqual(cartao.faturas[0].itens.map((i) => `${i.descricao} ${i.parcela}`), ['Celular 2/4', 'Antes do fechamento 1/1']);
+  // Tudo o que ocupa o limite aparece em alguma fatura.
+  const somaFaturas = cartao.faturas.reduce((total, f) => total + Math.round(f.total * 100), 0) / 100;
+  assert.equal(somaFaturas, cartao.limiteUtilizado);
 });
 
 test('outro usuário não vê os cartões do primeiro', async () => {

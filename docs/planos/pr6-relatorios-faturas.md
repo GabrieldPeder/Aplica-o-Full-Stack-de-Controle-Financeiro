@@ -24,7 +24,7 @@ Relatório de entradas, saídas e saldo por fonte/destino num período (RF8) e p
 
 ## Decisões
 
-- **"Hoje" como parâmetro.** `previsao` recebe `hoje` (padrão: data atual em UTC). Os testes passam uma data fixa, sem mexer no relógio.
+- **"Hoje" como parâmetro.** `previsao` recebe `hoje` (padrão: data atual no horário de Brasília, por `hojeIso()`). Os testes passam uma data fixa, sem mexer no relógio.
 - **Janela de faturas a partir de hoje.** A fatura atual é `calcularFatura(hoje, cartão, 1)`: é a fatura em que cairia uma compra feita hoje. As próximas são as parcelas 2, 3… dessa mesma conta. Assim "compra no dia do fechamento vai para o mês seguinte" vale também para escolher a fatura atual.
 - **O que compõe uma fatura.** Só lançamentos de **saída** no cartão. Cada parcela vai para `calcularFatura(dataDaCompra, cartão, parcela)`. Faturas sem itens aparecem com total R$ 0,00.
 - **Limite utilizado.** É a soma de todas as parcelas com vencimento hoje ou depois, incluindo uma fatura já fechada e ainda não vencida. O limite disponível pode ficar negativo, e a tela destaca isso.
@@ -62,7 +62,7 @@ Relatório de entradas, saídas e saldo por fonte/destino num período (RF8) e p
 ## Tarefa 3 — Previsão de faturas (RF9)
 
 **Arquivos:** `backend/src/models/fatura.js` · **Testes:** `backend/test/models/fatura.test.js`
-**Entrega:** `{ cartoes: [{ id, nome, diaFechamento, diaVencimento, limite, limiteUtilizado, limiteDisponivel, faturas: [{ referencia, fechamento, vencimento, atual, total, itens: [{ id, descricao, parcela, valor, dataCompra }] }] }] }`.
+**Entrega:** `{ cartoes: [{ id, nome, diaFechamento, diaVencimento, limite, limiteUtilizado, limiteDisponivel, faturas: [{ referencia, fechamento, vencimento, situacao, atual, total, itens: [{ id, descricao, parcela, valor, dataCompra }] }] }] }`.
 
 - [x] Testes (hoje fixo): fatura atual + próximas `meses`, inclusive vazias; compra no dia do fechamento cai na fatura seguinte; parcelas 1/3, 2/3, 3/3 em faturas seguidas com "x/3" no item; parcela vencida fora do limite e da previsão; entrada no cartão ignorada; cartão sem lançamentos tem limite todo disponível; isolamento.
 - [x] Ver falharem, implementar, ver passarem.
@@ -92,3 +92,19 @@ Relatório de entradas, saídas e saldo por fonte/destino num período (RF8) e p
 - [x] Estados de carregando, vazio e erro.
 - [x] Conferir: lint e build limpos; no navegador, com lançamentos parcelados, os valores batem com a regra de fechamento.
 - [x] Commit: `feat: telas de relatório por fonte/destino e de faturas`
+
+---
+
+## Correções após a revisão
+
+- **Fatura fechada e ainda não vencida:** entre o fechamento e o vencimento, a fatura que acabou de fechar contava no limite utilizado, mas não aparecia na tela. Agora ela aparece antes da atual com `situacao: 'fechada'` e o selo "A pagar". As outras faturas têm `situacao` `'aberta'` (a atual) ou `'futura'`. Com isso, a soma das faturas mostradas é igual ao limite utilizado (teste `entre o fechamento e o vencimento…`).
+- **"Hoje" no plano:** o texto dizia UTC; o código usa o horário de Brasília (`hojeIso`).
+
+## Pendências menores
+
+- Com muitas fontes/destinos (15 ou mais), os nomes do gráfico de barras se sobrepõem e alguns somem; um gráfico horizontal ou "top N + Outros" resolveria.
+- As abas de Relatórios usam `role="tab"`, mas não têm `role="tabpanel"` nem navegação pelas setas.
+- O Recharts deixa o pacote do front-end com cerca de 770 kB (aviso no build); carregar Relatórios e Faturas com `React.lazy` reduziria.
+- Ao digitar o ano no campo de data, o Chrome dispara uma consulta por dígito; as respostas antigas são ignoradas, mas o erro de período pisca.
+- O ano `0000` passa na validação de data e o banco recusa com "Parâmetro inválido." sem apontar o campo.
+- `previsao` carrega todas as compras no cartão do usuário, sem filtro de data (sem impacto no tamanho deste projeto).

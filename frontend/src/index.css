@@ -431,9 +431,14 @@ h2 {
   border-radius: 8px;
 }
 
-.fatura.atual {
+.fatura.aberta {
   border-color: var(--cor-primaria);
   box-shadow: 0 0 0 1px var(--cor-primaria);
+}
+
+.fatura.fechada {
+  border-color: #d97706;
+  background: #fffbeb;
 }
 
 .fatura header {
@@ -453,6 +458,7 @@ h2 {
 }
 
 .selo {
+  white-space: nowrap;
   margin-left: 0.5rem;
   padding: 0.1rem 0.45rem;
   border-radius: 999px;
@@ -460,4 +466,9 @@ h2 {
   color: var(--cor-primaria);
   font-size: 0.75rem;
   text-transform: none;
+}
+
+.selo-alerta {
+  background: #fef3c7;
+  color: #92400e;
 }

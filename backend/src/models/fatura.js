@@ -6,6 +6,7 @@ import { calcularFatura, hojeIso } from '../config/datas.js';
 import { paraCentavos, deCentavos } from '../config/dinheiro.js';
 
 // meses: quantas faturas além da atual; hoje: 'AAAA-MM-DD' (os testes passam uma data fixa).
+// Cada fatura tem situacao 'fechada' (fechou e ainda não venceu), 'aberta' (a atual) ou 'futura'.
 export async function previsao(usuarioId, { meses = 3, hoje = hojeIso() } = {}) {
   const { rows: cartoes } = await consultar(
     `SELECT id, nome, dia_fechamento, dia_vencimento, limite
@@ -28,10 +29,14 @@ export async function previsao(usuarioId, { meses = 3, hoje = hojeIso() } = {}) 
     cartoes: cartoes.map((linha) => {
       const cartao = { diaFechamento: linha.dia_fechamento, diaVencimento: linha.dia_vencimento };
 
-      // A fatura atual é aquela em que cairia uma compra feita hoje; as seguintes, mês a mês.
+      // A fatura atual (aberta) é aquela em que cairia uma compra feita hoje; as seguintes, mês a mês.
+      // Antes dela entra a fatura anterior se já fechou mas ainda não venceu (conta a pagar).
       const faturas = [];
+      const anterior = calcularFatura(hoje, cartao, 0);
+      if (anterior.vencimento >= hoje) faturas.push({ ...anterior, situacao: 'fechada', atual: false, centavos: 0, itens: [] });
       for (let i = 0; i <= meses; i++) {
-        faturas.push({ ...calcularFatura(hoje, cartao, i + 1), atual: i === 0, centavos: 0, itens: [] });
+        const situacao = i === 0 ? 'aberta' : 'futura';
+        faturas.push({ ...calcularFatura(hoje, cartao, i + 1), situacao, atual: i === 0, centavos: 0, itens: [] });
       }
       const porReferencia = new Map(faturas.map((f) => [f.referencia, f]));
 

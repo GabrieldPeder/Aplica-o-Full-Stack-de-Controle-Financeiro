@@ -30,11 +30,12 @@ function BarraLimite({ cartao }) {
 
 function CartaoFatura({ fatura }) {
   return (
-    <article className={fatura.atual ? 'fatura atual' : 'fatura'}>
+    <article className={`fatura ${fatura.situacao}`}>
       <header>
         <h3>
           {mesAno(fatura.referencia)}
-          {fatura.atual && <span className="selo">Atual</span>}
+          {fatura.situacao === 'aberta' && <span className="selo">Atual</span>}
+          {fatura.situacao === 'fechada' && <span className="selo selo-alerta" title="Fatura fechada, ainda não vencida">A pagar</span>}
         </h3>
         <strong>{moeda(fatura.total)}</strong>
       </header>
