@@ -324,3 +324,140 @@ h2 {
   border-radius: 10px;
   background: #fff;
 }
+
+/* ---------- relatórios ---------- */
+.abas {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.aba {
+  background: transparent;
+  color: var(--cor-suave);
+  border-radius: 6px 6px 0 0;
+  border-bottom: 2px solid transparent;
+}
+
+.aba:hover:not(:disabled) {
+  background: var(--cor-fundo);
+}
+
+.aba.ativa {
+  color: var(--cor-primaria);
+  border-bottom-color: var(--cor-primaria);
+}
+
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0 1.5rem;
+}
+
+.destaque {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.destaque span {
+  color: var(--cor-suave);
+  font-size: 0.9rem;
+}
+
+.destaque strong {
+  font-size: 1.4rem;
+}
+
+.positivo {
+  color: #15803d;
+}
+
+.negativo {
+  color: var(--cor-erro);
+}
+
+.tabela .valor {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------- faturas ---------- */
+.titulo-com-acoes {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.limite {
+  margin: 1rem 0 1.25rem;
+}
+
+.barra {
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.barra-preenchida {
+  height: 100%;
+  background: var(--cor-primaria);
+}
+
+.barra-preenchida.estourado {
+  background: var(--cor-erro);
+}
+
+.limite-legenda {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.faturas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.fatura {
+  padding: 1rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+}
+
+.fatura.atual {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 1px var(--cor-primaria);
+}
+
+.fatura header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.fatura h3 {
+  margin: 0;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.fatura .detalhe {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.selo {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: var(--cor-primaria);
+  font-size: 0.75rem;
+  text-transform: none;
+}

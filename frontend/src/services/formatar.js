@@ -19,3 +19,28 @@ const FORMATO_REAL = new Intl.NumberFormat('pt-BR', { style: 'currency', currenc
 export function moeda(valor) {
   return FORMATO_REAL.format(Number(valor ?? 0));
 }
+
+// '2026-11-03' → '03/11/2026'
+export function dataBr(iso) {
+  if (!iso) return '';
+  const [ano, mes, dia] = iso.split('-');
+  return `${dia}/${mes}/${ano}`;
+}
+
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+// '2026-12' → 'dez/2026'
+export function mesAno(referencia) {
+  const [ano, mes] = referencia.split('-');
+  return `${MESES[Number(mes) - 1]}/${ano}`;
+}
+
+const doisDigitos = (n) => String(n).padStart(2, '0');
+
+// Primeiro e último dia do mês atual, no formato AAAA-MM-DD (horário do navegador).
+export function mesAtual(hoje = new Date()) {
+  const ano = hoje.getFullYear();
+  const mes = hoje.getMonth() + 1;
+  const ultimoDia = new Date(ano, mes, 0).getDate();
+  return { inicio: `${ano}-${doisDigitos(mes)}-01`, fim: `${ano}-${doisDigitos(mes)}-${doisDigitos(ultimoDia)}` };
+}

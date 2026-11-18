@@ -46,27 +46,27 @@ Relatório de entradas, saídas e saldo por fonte/destino num período (RF8) e p
 **Arquivos:** `backend/src/config/datas.js`, `backend/src/middlewares/validar.js`
 **Testes:** `backend/test/config/datas.test.js`, `backend/test/middlewares/validar.test.js`
 
-- [ ] Testes: tabela do enunciado; fechamento 31 em fevereiro (vira 28/02); dia de vencimento 31 em mês de 30 dias; parcela 12 atravessando o ano; `dataValida` recusa `2026-02-30`, `2026-13-01`, `26-1-1`; regra `data()` normaliza e dá a mensagem certa.
-- [ ] Ver falharem, implementar, ver passarem.
-- [ ] Commit: `feat: cálculo de fatura e validação de datas`
+- [x] Testes: tabela do enunciado; fechamento 31 em fevereiro (vira 28/02); dia de vencimento 31 em mês de 30 dias; parcela 12 atravessando o ano; `dataValida` recusa `2026-02-30`, `2026-13-01`, `26-1-1`; regra `data()` normaliza e dá a mensagem certa.
+- [x] Ver falharem, implementar, ver passarem.
+- [x] Commit: `feat: cálculo de fatura e validação de datas`
 
 ## Tarefa 2 — Relatório por fonte/destino (RF8)
 
 **Arquivos:** `backend/src/models/relatorio.js` · **Testes:** `backend/test/models/relatorio.test.js`
 **Entrega:** `{ periodo: { inicio, fim }, totalEntradas, totalSaidas, entradasPorFonte: [{ id, nome, tipo, total }], saidasPorDestino: [...], saldoContas: [{ id, nome, entradas, saidas, saldo }] }`, listas ordenadas por total (maior primeiro).
 
-- [ ] Testes: somas por fonte e por destino só dentro do período; saldo de cada conta (inclusive conta sem movimento, com zeros); totais em centavos exatos (0,10 + 0,20 = 0,30); isolamento entre usuários.
-- [ ] Ver falharem, implementar, ver passarem.
-- [ ] Commit: `feat: relatório por fonte/destino`
+- [x] Testes: somas por fonte e por destino só dentro do período; saldo de cada conta (inclusive conta sem movimento, com zeros); totais em centavos exatos (0,10 + 0,20 = 0,30); isolamento entre usuários.
+- [x] Ver falharem, implementar, ver passarem.
+- [x] Commit: `feat: relatório por fonte/destino`
 
 ## Tarefa 3 — Previsão de faturas (RF9)
 
 **Arquivos:** `backend/src/models/fatura.js` · **Testes:** `backend/test/models/fatura.test.js`
 **Entrega:** `{ cartoes: [{ id, nome, diaFechamento, diaVencimento, limite, limiteUtilizado, limiteDisponivel, faturas: [{ referencia, fechamento, vencimento, atual, total, itens: [{ id, descricao, parcela, valor, dataCompra }] }] }] }`.
 
-- [ ] Testes (hoje fixo): fatura atual + próximas `meses`, inclusive vazias; compra no dia do fechamento cai na fatura seguinte; parcelas 1/3, 2/3, 3/3 em faturas seguidas com "x/3" no item; parcela vencida fora do limite e da previsão; entrada no cartão ignorada; cartão sem lançamentos tem limite todo disponível; isolamento.
-- [ ] Ver falharem, implementar, ver passarem.
-- [ ] Commit: `feat: previsão de faturas dos cartões`
+- [x] Testes (hoje fixo): fatura atual + próximas `meses`, inclusive vazias; compra no dia do fechamento cai na fatura seguinte; parcelas 1/3, 2/3, 3/3 em faturas seguidas com "x/3" no item; parcela vencida fora do limite e da previsão; entrada no cartão ignorada; cartão sem lançamentos tem limite todo disponível; isolamento.
+- [x] Ver falharem, implementar, ver passarem.
+- [x] Commit: `feat: previsão de faturas dos cartões`
 
 ## Tarefa 4 — Rotas
 
@@ -78,17 +78,17 @@ Relatório de entradas, saídas e saldo por fonte/destino num período (RF8) e p
 | GET | `/api/relatorios/fontes-destinos?inicio=&fim=` | 200 · 400 · 401 |
 | GET | `/api/relatorios/faturas?meses=3` | 200 · 400 · 401 |
 
-- [ ] Testes: sem token → 401; datas ausentes, inválidas ou invertidas → 400 com o campo; `meses` 0 ou 13 → 400; respostas 200 com o formato acima.
-- [ ] Ver falharem, implementar, registrar em `server.js` com `autenticar`, ver passarem.
-- [ ] README: rotas e decisões de faturas.
-- [ ] Commit: `feat: rotas de relatório por fonte/destino e faturas`
+- [x] Testes: sem token → 401; datas ausentes, inválidas ou invertidas → 400 com o campo; `meses` 0 ou 13 → 400; respostas 200 com o formato acima.
+- [x] Ver falharem, implementar, registrar em `server.js` com `autenticar`, ver passarem.
+- [x] README: rotas e decisões de faturas.
+- [x] Commit: `feat: rotas de relatório por fonte/destino e faturas`
 
 ## Tarefa 5 — Telas
 
 **Arquivos:** `components/paginas/{Relatorios,RelatorioFontesDestinos,Faturas}.jsx`, `services/formatar.js`, `App.jsx`, `index.css`, `package.json` (Recharts)
 
-- [ ] Relatórios: seletor de período (padrão: mês atual) e abas; aba "Por fonte/destino" com resumo, gráfico de barras (entradas × saídas) e tabelas de entradas por fonte, saídas por destino e saldo das contas.
-- [ ] Faturas: para cada cartão, dias de fechamento e vencimento, barra de limite usado/disponível (vermelha se estourar), cartões das faturas com itens "Notebook — 3/10", destaque da fatura atual e estado vazio.
-- [ ] Estados de carregando, vazio e erro.
-- [ ] Conferir: lint e build limpos; no navegador, com lançamentos parcelados, os valores batem com a regra de fechamento.
-- [ ] Commit: `feat: telas de relatório por fonte/destino e de faturas`
+- [x] Relatórios: seletor de período (padrão: mês atual) e abas; aba "Por fonte/destino" com resumo, gráfico de barras (entradas × saídas) e tabelas de entradas por fonte, saídas por destino e saldo das contas.
+- [x] Faturas: para cada cartão, dias de fechamento e vencimento, barra de limite usado/disponível (vermelha se estourar), cartões das faturas com itens "Notebook — 3/10", destaque da fatura atual e estado vazio.
+- [x] Estados de carregando, vazio e erro.
+- [x] Conferir: lint e build limpos; no navegador, com lançamentos parcelados, os valores batem com a regra de fechamento.
+- [x] Commit: `feat: telas de relatório por fonte/destino e de faturas`
