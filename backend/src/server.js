@@ -8,6 +8,7 @@ import { autenticar } from './middlewares/autenticar.js';
 import { criarRotasAuth } from './routes/auth.js';
 import rotasCategorias from './routes/categorias.js';
 import rotasFontesDestinos from './routes/fontesDestinos.js';
+import rotasRelatorios from './routes/relatorios.js';
 
 export function criarApp() {
   const app = express();
@@ -24,6 +25,7 @@ export function criarApp() {
   // Daqui para baixo, todas as rotas exigem token (autenticar coloca req.usuarioId).
   app.use('/api/categorias', autenticar, rotasCategorias);
   app.use('/api/fontes-destinos', autenticar, rotasFontesDestinos);
+  app.use('/api/relatorios', autenticar, rotasRelatorios);
 
   app.use(rotaNaoEncontrada);
   app.use(tratarErros);

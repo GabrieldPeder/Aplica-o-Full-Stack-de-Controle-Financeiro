@@ -109,6 +109,13 @@ frontend/src/
 - No front-end, `formatar.js` (moeda, datas, máscaras) e o hook `useApi.js` ficam em `services/`.
 - Datas do tipo `DATE` voltam do banco como texto `AAAA-MM-DD`, para evitar erro de fuso horário.
 
+**Faturas de cartão (RF9):**
+
+- Todas as parcelas de uma compra guardam a **data da compra**. A fatura de cada parcela é calculada por `calcularFatura(data, cartão, parcela)` (`backend/src/config/datas.js`, implementação de referência do enunciado). Assim, mudar o dia de fechamento de um cartão recalcula todas as faturas.
+- Por isso os relatórios por período (RF7, RF8) contam uma compra parcelada inteira no mês em que foi feita; só a tela de faturas distribui as parcelas pelos meses.
+- A fatura atual é aquela em que cairia uma compra feita hoje (horário de Brasília). Uma compra no dia do fechamento já vai para a fatura seguinte.
+- Limite utilizado = soma de todas as parcelas com vencimento hoje ou depois.
+
 ## Padrão de erros da API
 
 Toda resposta de erro tem o formato:
@@ -133,6 +140,8 @@ Toda resposta de erro tem o formato:
 | `POST` | `/api/fontes-destinos` | Cria (`nome`, `tipo`: `renda`, `conta` ou `cartao_credito`; cartão exige `diaFechamento`, `diaVencimento`, `limite`; conta aceita `reserva`) |
 | `PUT` | `/api/fontes-destinos/:id` | Edita; o tipo só muda se não houver lançamentos |
 | `DELETE` | `/api/fontes-destinos/:id` | Exclui; 409 se houver lançamentos |
+| `GET` | `/api/relatorios/fontes-destinos?inicio=&fim=` | Entradas por fonte, saídas por destino e saldo das contas no período (datas `AAAA-MM-DD`) |
+| `GET` | `/api/relatorios/faturas?meses=3` | Fatura atual e as próximas `meses` (1 a 12) de cada cartão, com parcelas e limite utilizado/disponível |
 
 Todas as rotas, exceto `/api/status`, `/api/auth/cadastro` e `/api/auth/login`, exigem o cabeçalho `Authorization: Bearer <token>`.
 As demais rotas são adicionadas pelos próximos PRs (ver a especificação).
