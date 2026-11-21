@@ -5,7 +5,7 @@
 | **Responsável** | João Vitor (implementa todas as tarefas deste plano) |
 | **Revisor** | Gabriel |
 | **Branch** | `feat/lancamentos` |
-| **Situação** | Em andamento |
+| **Situação** | Concluído |
 | **Especificação** | [especificacao.md](../especificacao.md) — seções 3, 4.3 e 4.4 |
 | **Depende de** | PR 1 (`autenticar`, `validar`, `AuthContext`, Layout) e PR 2 (categorias e fontes/destinos) |
 
@@ -65,7 +65,7 @@ Entregar o CRUD de lançamentos (RF6): API com filtros, paginação, totais e co
 - [x] Implementar e ver passar (`npm test`: 58/58).
 - [x] Commit: `feat: model de lançamentos com filtros, totais e parcelamento`
 
-## Tarefa 3 — Rotas da API
+## Tarefa 3 — Rotas da API ✅
 
 **Arquivos:** `backend/src/routes/lancamentos.js`, `backend/src/server.js` · **Testes:** `backend/test/routes/lancamentos.test.js`
 **Usa:** Tarefa 2; `autenticar` e `validar` do PR 1.
@@ -78,23 +78,23 @@ Entregar o CRUD de lançamentos (RF6): API com filtros, paginação, totais e co
 | PUT | `/api/lancamentos/:id` | 200 ou 400/404 |
 | DELETE | `/api/lancamentos/:id?todasParcelas=true` | 204 ou 404 |
 
-- [ ] Regras do `validar`: `tipo` ∈ {entrada, saida}; `descricao` 1–120 (trim); `valor` > 0 com até 2 casas; `data` `AAAA-MM-DD` existente; `categoriaId`/`fonteDestinoId` inteiros positivos; `totalParcelas` inteiro 1–48 (padrão 1). Query: `inicio`/`fim` (padrão: 1º e último dia do mês corrente), `tipo`, ids, `pagina` ≥ 1.
-- [ ] Testes de API: sem token → 401; corpo inválido → 400 com **todos** os campos; parcelado 100/3 soma 100,00; A não acessa B → 404; DELETE → 204.
-- [ ] Implementar, registrar em `server.js` (`app.use('/api/lancamentos', autenticar, rotas)`), ver passar.
-- [ ] Atualizar a tabela de rotas do README.
-- [ ] Commit: `feat: rotas de lançamentos`
+- [x] Regras do `validar`: `tipo` ∈ {entrada, saida}; `descricao` 1–120 (trim); `valor` > 0 com até 2 casas; `data` `AAAA-MM-DD` existente; `categoriaId`/`fonteDestinoId` inteiros positivos; `totalParcelas` inteiro 1–48 (padrão 1). Query: `inicio`/`fim` (padrão: 1º e último dia do mês corrente), `tipo`, ids, `pagina` ≥ 1.
+- [x] Testes de API: sem token → 401; corpo inválido → 400 com **todos** os campos; parcelado 100/3 soma 100,00; A não acessa B → 404; DELETE → 204.
+- [x] Implementar, registrar em `server.js` (`app.use('/api/lancamentos', autenticar, rotas)`), ver passar.
+- [x] Atualizar a tabela de rotas do README.
+- [x] Commit: `feat: rotas de lançamentos`
 
-## Tarefa 4 — Tela de Lançamentos
+## Tarefa 4 — Tela de Lançamentos ✅
 
 **Arquivos:** `frontend/src/components/paginas/Lancamentos.jsx`, componentes em `comuns/` que faltarem (`CampoMoeda`, `ConfirmarExclusao`), `services/formatar.js`, `App.jsx`
 **Usa:** Tarefa 3; `useApi`, `AuthContext` e Layout do PR 1; listas de categorias e fontes do PR 2.
 
-- [ ] Filtros (período, tipo, categoria, fonte/destino) e tabela paginada com totais; estados carregando / lista vazia / erro.
-- [ ] Formulário: categoria filtrada pelo tipo; campo de parcelas só quando o destino é cartão e o tipo é saída; erros do servidor sob cada campo.
-- [ ] Edição: em parcelado, `data`, `tipo`, fonte e parcelas ficam desabilitados com a dica "exclua e lance novamente".
-- [ ] Exclusão com confirmação; em parcelado, escolher "só esta parcela" ou "todas as parcelas".
-- [ ] Valores em BRL e datas `dd/mm/aaaa`.
-- [ ] Commit: `feat: tela de lançamentos`
+- [x] Filtros (período, tipo, categoria, fonte/destino) e tabela paginada com totais; estados carregando / lista vazia / erro.
+- [x] Formulário: categoria filtrada pelo tipo; campo de parcelas só quando o destino é cartão e o tipo é saída; erros do servidor sob cada campo.
+- [x] Edição: em parcelado, `data`, `tipo`, fonte e parcelas ficam desabilitados com a dica "exclua e lance novamente".
+- [x] Exclusão com confirmação; em parcelado, escolher "só esta parcela" ou "todas as parcelas".
+- [x] Valores em BRL e datas `dd/mm/aaaa`.
+- [x] Commit: `feat: tela de lançamentos`
 
 ## Para combinar com o Gabriel (PR 1)
 

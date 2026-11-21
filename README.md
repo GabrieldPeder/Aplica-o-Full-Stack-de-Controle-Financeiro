@@ -141,6 +141,11 @@ Toda resposta de erro tem o formato:
 | `POST` | `/api/fontes-destinos` | Cria (`nome`, `tipo`: `renda`, `conta` ou `cartao_credito`; cartão exige `diaFechamento`, `diaVencimento`, `limite`; conta aceita `reserva`) |
 | `PUT` | `/api/fontes-destinos/:id` | Edita; o tipo só muda se não houver lançamentos |
 | `DELETE` | `/api/fontes-destinos/:id` | Exclui; 409 se houver lançamentos |
+| `GET` | `/api/lancamentos` | Lista com filtros `inicio`, `fim` (padrão: mês corrente), `tipo`, `categoriaId`, `fonteDestinoId`, `pagina` (20 por página); devolve `{ itens, pagina, totalPaginas, totalItens, totais }` |
+| `POST` | `/api/lancamentos` | Cria (`tipo`, `descricao`, `valor`, `data`, `categoriaId`, `fonteDestinoId`, `totalParcelas` 1–48 só em saída no cartão); devolve a lista de parcelas criadas |
+| `GET` | `/api/lancamentos/:id` | Um lançamento |
+| `PUT` | `/api/lancamentos/:id` | Edita; em compra parcelada só `descricao`, `categoriaId` e `valor` mudam |
+| `DELETE` | `/api/lancamentos/:id?todasParcelas=true` | Exclui o lançamento ou, com `todasParcelas`, a compra inteira |
 | `GET` | `/api/relatorios/fontes-destinos?inicio=&fim=` | Entradas por fonte, saídas por destino e saldo das contas no período (datas `AAAA-MM-DD`) |
 | `GET` | `/api/relatorios/faturas?meses=3` | Fatura atual e as próximas `meses` (1 a 12) de cada cartão, com parcelas e limite utilizado/disponível |
 

@@ -14,6 +14,7 @@ export function useApi(caminho, parametros) {
   useEffect(() => {
     let ativo = true; // ignora respostas que chegam depois de a tela mudar
     const [caminhoAtual, parametrosAtuais] = JSON.parse(chave);
+    if (!caminhoAtual) return undefined; // caminho null = não consultar agora (ex.: filtro inválido)
     api
       .get(caminhoAtual, { params: parametrosAtuais })
       .then(({ data }) => ativo && setResultado({ chave, dados: data, erro: '' }))
