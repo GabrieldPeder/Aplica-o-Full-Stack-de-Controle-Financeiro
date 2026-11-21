@@ -129,7 +129,11 @@ export async function criar(usuarioId, dados) {
   return emTransacao(async (cliente) => {
     await conferirVinculos(cliente, usuarioId, { ...dados, totalParcelas });
 
-    const parcelas = dividirEmParcelas(paraCentavos(dados.valor), totalParcelas);
+    const centavos = paraCentavos(dados.valor);
+    if (centavos < totalParcelas) {
+      throw new ErroApi(400, 'Dados inválidos.', { valor: 'Cada parcela precisa ter pelo menos R$ 0,01.' });
+    }
+    const parcelas = dividirEmParcelas(centavos, totalParcelas);
     const grupo = totalParcelas > 1 ? randomUUID() : null;
 
     const ids = [];
