@@ -47,3 +47,13 @@ const FORMATO_BRASILIA = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/S
 export function hojeIso(agora = new Date()) {
   return FORMATO_BRASILIA.format(agora);
 }
+
+// Primeiro e último dia do mês de uma data 'AAAA-MM-DD' (padrão dos filtros: mês corrente).
+export function inicioDoMes(dataIso = hojeIso()) {
+  return `${dataIso.slice(0, 7)}-01`;
+}
+
+export function fimDoMes(dataIso = hojeIso()) {
+  const [ano, mes] = dataIso.split('-').map(Number);
+  return `${dataIso.slice(0, 7)}-${String(ultimoDiaDoMes(ano, mes - 1)).padStart(2, '0')}`;
+}

@@ -58,3 +58,11 @@ test('hojeIso devolve a data no formato AAAA-MM-DD', () => {
   assert.match(hojeIso(), /^\d{4}-\d{2}-\d{2}$/);
   assert.equal(hojeIso(new Date('2026-11-18T23:30:00-03:00')), '2026-11-18');
 });
+
+test('inicioDoMes e fimDoMes', async () => {
+  const { inicioDoMes, fimDoMes } = await import('../../src/config/datas.js');
+  assert.equal(inicioDoMes('2026-11-21'), '2026-11-01');
+  assert.equal(fimDoMes('2026-11-21'), '2026-11-30');
+  assert.equal(fimDoMes('2028-02-10'), '2028-02-29');
+  assert.equal(fimDoMes('2026-12-31'), '2026-12-31');
+});

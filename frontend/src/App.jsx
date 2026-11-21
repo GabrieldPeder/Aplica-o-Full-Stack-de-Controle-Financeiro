@@ -8,6 +8,7 @@ import Categorias from './components/paginas/Categorias.jsx';
 import FontesDestinos from './components/paginas/FontesDestinos.jsx';
 import Relatorios from './components/paginas/Relatorios.jsx';
 import Faturas from './components/paginas/Faturas.jsx';
+import Lancamentos from './components/paginas/Lancamentos.jsx';
 
 export default function App() {
   return (
@@ -18,7 +19,7 @@ export default function App() {
       <Route element={<RotaProtegida />}>
         <Route element={<Layout />}>
           <Route path="/" element={<EmConstrucao titulo="Dashboard" />} />
-          <Route path="/lancamentos" element={<EmConstrucao titulo="Lançamentos" />} />
+          <Route path="/lancamentos" element={<Lancamentos />} />
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/fontes-destinos" element={<FontesDestinos />} />
           <Route path="/relatorios" element={<Relatorios />} />
