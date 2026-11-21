@@ -3,6 +3,7 @@
 // para não acumular erro de arredondamento.
 import { consultar } from '../config/db.js';
 import { deCentavos } from '../config/dinheiro.js';
+import { periodoAnterior } from '../config/datas.js';
 
 const reais = (centavos) => deCentavos(Number(centavos));
 
@@ -53,5 +54,54 @@ export async function porFonteDestino(usuarioId, periodo) {
       saidas: reais(saidas),
       saldo: reais(Number(entradas) - Number(saidas)),
     })),
+  };
+}
+
+// Soma por categoria de um tipo, no período atual e no anterior, numa consulta só.
+async function somarPorCategoria(usuarioId, tipo, atual, anterior) {
+  const { rows } = await consultar(
+    `SELECT c.id, c.nome,
+       (COALESCE(SUM(l.valor) FILTER (WHERE l.data BETWEEN $3 AND $4), 0) * 100)::bigint AS atual,
+       (COALESCE(SUM(l.valor) FILTER (WHERE l.data BETWEEN $5 AND $6), 0) * 100)::bigint AS anterior
+     FROM lancamentos l
+     JOIN categorias c ON c.id = l.categoria_id
+     WHERE l.usuario_id = $1 AND l.tipo = $2
+       AND (l.data BETWEEN $3 AND $4 OR l.data BETWEEN $5 AND $6)
+     GROUP BY c.id`,
+    [usuarioId, tipo, atual.inicio, atual.fim, anterior.inicio, anterior.fim],
+  );
+  return rows.map(({ id, nome, atual: a, anterior: b }) => ({ id, nome, atual: Number(a), anterior: Number(b) }));
+}
+
+// RF7 — saídas por categoria (com % do total e comparação com o período anterior) e
+// entradas por categoria. Categorias com valor só no período anterior aparecem com total 0.
+export async function porCategoria(usuarioId, periodo) {
+  const anterior = periodoAnterior(periodo);
+  const [saidas, entradas] = await Promise.all([
+    somarPorCategoria(usuarioId, 'saida', periodo, anterior),
+    somarPorCategoria(usuarioId, 'entrada', periodo, anterior),
+  ]);
+
+  const totalSaidas = saidas.reduce((t, c) => t + c.atual, 0);
+  const totalEntradas = entradas.reduce((t, c) => t + c.atual, 0);
+  const porTotal = (x, y) => y.atual - x.atual || x.nome.localeCompare(y.nome, 'pt-BR');
+
+  return {
+    periodo: { inicio: periodo.inicio, fim: periodo.fim },
+    periodoAnterior: anterior,
+    totalSaidas: reais(totalSaidas),
+    totalEntradas: reais(totalEntradas),
+    saidas: saidas.sort(porTotal).map((c) => ({
+      id: c.id,
+      nome: c.nome,
+      total: reais(c.atual),
+      percentual: totalSaidas > 0 ? Math.round((c.atual * 10000) / totalSaidas) / 100 : 0,
+      totalAnterior: reais(c.anterior),
+      variacao: reais(c.atual - c.anterior),
+    })),
+    entradas: entradas
+      .filter((c) => c.atual > 0)
+      .sort(porTotal)
+      .map((c) => ({ id: c.id, nome: c.nome, total: reais(c.atual) })),
   };
 }

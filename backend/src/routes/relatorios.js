@@ -21,6 +21,11 @@ function dataFinal() {
 
 const periodo = { query: { inicio: data(), fim: dataFinal() } };
 
+// RF7 — saídas e entradas por categoria, comparando com o período anterior.
+rotas.get('/categorias', validar(periodo), async (req, res) => {
+  res.json(await relatorio.porCategoria(req.usuarioId, req.filtros));
+});
+
 // RF8 — entradas por fonte, saídas por destino e saldo das contas no período.
 rotas.get('/fontes-destinos', validar(periodo), async (req, res) => {
   res.json(await relatorio.porFonteDestino(req.usuarioId, req.filtros));
