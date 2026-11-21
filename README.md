@@ -157,6 +157,7 @@ Toda resposta de erro tem o formato:
 | `GET` | `/api/lancamentos/:id` | Um lançamento |
 | `PUT` | `/api/lancamentos/:id` | Edita; em compra parcelada só `descricao`, `categoriaId` e `valor` mudam |
 | `DELETE` | `/api/lancamentos/:id?todasParcelas=true` | Exclui o lançamento ou, com `todasParcelas`, a compra inteira |
+| `GET` | `/api/relatorios/categorias?inicio=&fim=` | Saídas por categoria (total, % do total, período anterior e variação) e entradas por categoria |
 | `GET` | `/api/relatorios/fontes-destinos?inicio=&fim=` | Entradas por fonte, saídas por destino e saldo das contas no período (datas `AAAA-MM-DD`) |
 | `GET` | `/api/relatorios/faturas?meses=3` | Fatura atual e as próximas `meses` (1 a 12) de cada cartão, com parcelas e limite utilizado/disponível |
 

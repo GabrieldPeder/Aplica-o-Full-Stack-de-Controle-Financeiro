@@ -12,7 +12,7 @@ O plano de um PR só é escrito quando o PR vai começar, porque depende do que 
 | 2 | Categorias + fontes/destinos | Gabriel | João Vitor | [pr2-categorias-fontes.md](pr2-categorias-fontes.md) | Aprovado (#6); entrega na main pelo #7 |
 | 3 | Lançamentos e parcelamento | João Vitor | Gabriel | [pr3-lancamentos.md](pr3-lancamentos.md) | Em revisão |
 | 4 | Seed de demonstração | João Vitor | Gabriel | — | Em revisão |
-| 5 | Relatório por categoria + Dashboard | João Vitor | Gabriel | — | A fazer |
+| 5 | Relatório por categoria + Dashboard | João Vitor | Gabriel | — | Em revisão |
 | 6 | Relatório por fonte/destino + Faturas | Gabriel | João Vitor | [pr6-relatorios-faturas.md](pr6-relatorios-faturas.md) | Em revisão |
 | 7 | Saúde financeira (desafio) | João Vitor | Gabriel | — | A fazer |
 | 8 | Acabamento e ensaio da apresentação | Ambos | — | — | A fazer |

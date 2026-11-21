@@ -66,3 +66,13 @@ test('inicioDoMes e fimDoMes', async () => {
   assert.equal(fimDoMes('2028-02-10'), '2028-02-29');
   assert.equal(fimDoMes('2026-12-31'), '2026-12-31');
 });
+
+test('periodoAnterior: mês inteiro, vários meses e intervalo arbitrário', async () => {
+  const { periodoAnterior } = await import('../../src/config/datas.js');
+  assert.deepEqual(periodoAnterior({ inicio: '2026-10-01', fim: '2026-10-31' }), { inicio: '2026-09-01', fim: '2026-09-30' });
+  assert.deepEqual(periodoAnterior({ inicio: '2026-10-01', fim: '2026-12-31' }), { inicio: '2026-07-01', fim: '2026-09-30' });
+  assert.deepEqual(periodoAnterior({ inicio: '2026-03-01', fim: '2026-03-31' }), { inicio: '2026-02-01', fim: '2026-02-28' });
+  assert.deepEqual(periodoAnterior({ inicio: '2026-01-01', fim: '2026-01-31' }), { inicio: '2025-12-01', fim: '2025-12-31' });
+  assert.deepEqual(periodoAnterior({ inicio: '2026-11-10', fim: '2026-11-19' }), { inicio: '2026-10-31', fim: '2026-11-09' });
+  assert.deepEqual(periodoAnterior({ inicio: '2026-03-01', fim: '2026-03-01' }), { inicio: '2026-02-28', fim: '2026-02-28' });
+});
