@@ -14,7 +14,7 @@ O plano de um PR só é escrito quando o PR vai começar, porque depende do que 
 | 4 | Seed de demonstração | João Vitor | Gabriel | — | Em revisão |
 | 5 | Relatório por categoria + Dashboard | João Vitor | Gabriel | — | Em revisão |
 | 6 | Relatório por fonte/destino + Faturas | Gabriel | João Vitor | [pr6-relatorios-faturas.md](pr6-relatorios-faturas.md) | Em revisão |
-| 7 | Saúde financeira (desafio) | João Vitor | Gabriel | — | A fazer |
+| 7 | Saúde financeira (desafio) | João Vitor | Gabriel | — | Em revisão |
 | 8 | Acabamento e ensaio da apresentação | Ambos | — | — | A fazer |
 
 ## Como um plano é organizado

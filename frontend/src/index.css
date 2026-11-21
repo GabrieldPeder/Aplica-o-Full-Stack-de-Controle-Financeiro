@@ -489,3 +489,44 @@ h2 {
 .texto-periodo {
   font-size: 1rem !important;
 }
+
+/* ---------- saúde financeira ---------- */
+.dicas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.dica {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  border-left: 4px solid #94a3b8;
+  background: #f8fafc;
+}
+
+.dica-alerta {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+}
+
+.dica-elogio {
+  border-left-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.dica-info {
+  border-left-color: #2563eb;
+  background: #eff6ff;
+}
+
+.aviso {
+  font-size: 0.85rem;
+  color: var(--cor-suave);
+  font-style: italic;
+  text-align: center;
+  margin-top: 1.5rem;
+}
