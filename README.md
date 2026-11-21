@@ -52,6 +52,7 @@ cp .env.example .env          # no Windows (cmd): copy .env.example .env
                               # depois troque JWT_SECRET no .env por um texto longo e aleatório
 npm install
 npm run db:criar              # cria as tabelas no banco de desenvolvimento
+npm run db:seed               # (opcional) carrega os dados de demonstração
 npm run db:teste              # cria as tabelas no banco de testes
 npm test                      # roda os testes automatizados
 npm run dev                   # API em http://localhost:3000
@@ -59,7 +60,16 @@ npm run dev                   # API em http://localhost:3000
 
 Teste rápido: `http://localhost:3000/api/status` deve responder `{"status":"ok"}`.
 
-> `npm run db:criar` **recria** as tabelas e apaga os dados existentes.
+> `npm run db:criar` **recria** as tabelas e apaga os dados existentes. `npm run db:seed` também apaga tudo antes de carregar a demonstração.
+
+**Usuários da demonstração** (`npm run db:seed`, senha `demo1234` para os dois):
+
+| Usuário | E-mail | Perfil |
+|---|---|---|
+| Ana Souza | `ana@exemplo.com` | Boa reserva de emergência; gastos com lazer acima da média no mês atual |
+| Bruno Lima | `bruno@exemplo.com` | Orçamento apertado, pouca reserva e mais compras parceladas |
+
+Os lançamentos são relativos à data de hoje (mês atual e os 2 anteriores). Cada usuário tem o **Cartão Roxo** (fecha dia 3, vence dia 10), o **Cartão Verde** (fecha dia 25, vence dia 5 do mês seguinte), uma **Poupança** marcada como reserva, compras parceladas e uma compra feita exatamente no dia do fechamento (cai na fatura seguinte).
 
 ### 3. Front-end
 
@@ -81,6 +91,7 @@ npm run dev                   # http://localhost:5173
 | backend | `npm test` | Testes automatizados (usam o banco `financas_teste`) |
 | backend | `npm run db:criar` | Recria as tabelas no banco de desenvolvimento |
 | backend | `npm run db:teste` | Recria as tabelas no banco de testes |
+| backend | `npm run db:seed` | Apaga os dados e carrega a demonstração (2 usuários, 3 meses de lançamentos) |
 | frontend | `npm run dev` | Sobe o front-end |
 | frontend | `npm run build` | Gera a versão de produção em `dist/` |
 | frontend | `npm run lint` | Verifica o código |
