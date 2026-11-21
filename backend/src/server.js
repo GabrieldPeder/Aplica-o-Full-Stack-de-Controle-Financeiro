@@ -10,6 +10,7 @@ import rotasCategorias from './routes/categorias.js';
 import rotasFontesDestinos from './routes/fontesDestinos.js';
 import rotasRelatorios from './routes/relatorios.js';
 import rotasLancamentos from './routes/lancamentos.js';
+import rotasSaude from './routes/saude.js';
 
 export function criarApp() {
   const app = express();
@@ -28,6 +29,7 @@ export function criarApp() {
   app.use('/api/fontes-destinos', autenticar, rotasFontesDestinos);
   app.use('/api/lancamentos', autenticar, rotasLancamentos);
   app.use('/api/relatorios', autenticar, rotasRelatorios);
+  app.use('/api/saude-financeira', autenticar, rotasSaude);
 
   app.use(rotaNaoEncontrada);
   app.use(tratarErros);

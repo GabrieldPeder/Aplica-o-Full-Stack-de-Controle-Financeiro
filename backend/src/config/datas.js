@@ -57,3 +57,21 @@ export function fimDoMes(dataIso = hojeIso()) {
   const [ano, mes] = dataIso.split('-').map(Number);
   return `${dataIso.slice(0, 7)}-${String(ultimoDiaDoMes(ano, mes - 1)).padStart(2, '0')}`;
 }
+
+const somarDias = (dataIso, dias) => iso(new Date(Date.parse(`${dataIso}T00:00:00Z`) + dias * 86400000));
+
+// Período imediatamente anterior, para comparar relatórios (especificação 4.5):
+// - meses inteiros (de dia 1 ao último dia) → o mesmo número de meses inteiros antes;
+//   ex.: outubro → setembro; out–dez → jul–set;
+// - qualquer outro intervalo → o mesmo número de dias, logo antes do início.
+export function periodoAnterior({ inicio, fim }) {
+  const [anoI, mesI, diaI] = inicio.split('-').map(Number);
+  const [anoF, mesF, diaF] = fim.split('-').map(Number);
+  const mesesInteiros = diaI === 1 && diaF === ultimoDiaDoMes(anoF, mesF - 1);
+  if (mesesInteiros) {
+    const meses = (anoF - anoI) * 12 + (mesF - mesI) + 1;
+    return { inicio: iso(dataSegura(anoI, mesI - 1 - meses, 1)), fim: somarDias(inicio, -1) };
+  }
+  const dias = Math.round((Date.parse(fim) - Date.parse(inicio)) / 86400000) + 1;
+  return { inicio: somarDias(inicio, -dias), fim: somarDias(inicio, -1) };
+}

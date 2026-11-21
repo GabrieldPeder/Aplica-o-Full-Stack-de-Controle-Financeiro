@@ -70,3 +70,11 @@ test('faturas: padrão de 3 meses além da atual', async () => {
   const seis = await chamar(api.base, 'GET', '/relatorios/faturas?meses=6', { token });
   assert.equal(seis.corpo.cartoes[0].faturas.length, 7);
 });
+
+test('categorias: sem datas → 400; com período → 200 no formato do RF7', async () => {
+  assert.equal((await chamar(api.base, 'GET', '/relatorios/categorias', { token })).status, 400);
+  const r = await chamar(api.base, 'GET', '/relatorios/categorias?inicio=2026-11-01&fim=2026-11-30', { token });
+  assert.equal(r.status, 200);
+  assert.deepEqual(r.corpo.periodoAnterior, { inicio: '2026-10-01', fim: '2026-10-31' });
+  assert.deepEqual(Object.keys(r.corpo).sort(), ['entradas', 'periodo', 'periodoAnterior', 'saidas', 'totalEntradas', 'totalSaidas']);
+});

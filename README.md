@@ -69,7 +69,7 @@ Teste rápido: `http://localhost:3000/api/status` deve responder `{"status":"ok"
 | Ana Souza | `ana@exemplo.com` | Boa reserva de emergência; gastos com lazer acima da média no mês atual |
 | Bruno Lima | `bruno@exemplo.com` | Orçamento apertado, pouca reserva e mais compras parceladas |
 
-Os lançamentos são relativos à data de hoje (mês atual e os 2 anteriores). Cada usuário tem o **Cartão Roxo** (fecha dia 3, vence dia 10), o **Cartão Verde** (fecha dia 25, vence dia 5 do mês seguinte), uma **Poupança** marcada como reserva, compras parceladas e uma compra feita exatamente no dia do fechamento (cai na fatura seguinte).
+Os lançamentos são relativos à data de hoje (mês atual e os 3 anteriores, que a saúde financeira usa como base). Cada usuário tem o **Cartão Roxo** (fecha dia 3, vence dia 10), o **Cartão Verde** (fecha dia 25, vence dia 5 do mês seguinte), uma **Poupança** marcada como reserva, compras parceladas e uma compra feita exatamente no dia do fechamento (cai na fatura seguinte).
 
 ### 3. Front-end
 
@@ -91,7 +91,7 @@ npm run dev                   # http://localhost:5173
 | backend | `npm test` | Testes automatizados (usam o banco `financas_teste`) |
 | backend | `npm run db:criar` | Recria as tabelas no banco de desenvolvimento |
 | backend | `npm run db:teste` | Recria as tabelas no banco de testes |
-| backend | `npm run db:seed` | Apaga os dados e carrega a demonstração (2 usuários, 3 meses de lançamentos) |
+| backend | `npm run db:seed` | Apaga os dados e carrega a demonstração (2 usuários, 4 meses de lançamentos) |
 | frontend | `npm run dev` | Sobe o front-end |
 | frontend | `npm run build` | Gera a versão de produção em `dist/` |
 | frontend | `npm run lint` | Verifica o código |
@@ -157,11 +157,28 @@ Toda resposta de erro tem o formato:
 | `GET` | `/api/lancamentos/:id` | Um lançamento |
 | `PUT` | `/api/lancamentos/:id` | Edita; em compra parcelada só `descricao`, `categoriaId` e `valor` mudam |
 | `DELETE` | `/api/lancamentos/:id?todasParcelas=true` | Exclui o lançamento ou, com `todasParcelas`, a compra inteira |
+| `GET` | `/api/relatorios/categorias?inicio=&fim=` | Saídas por categoria (total, % do total, período anterior e variação) e entradas por categoria |
 | `GET` | `/api/relatorios/fontes-destinos?inicio=&fim=` | Entradas por fonte, saídas por destino e saldo das contas no período (datas `AAAA-MM-DD`) |
 | `GET` | `/api/relatorios/faturas?meses=3` | Fatura atual e as próximas `meses` (1 a 12) de cada cartão, com parcelas e limite utilizado/disponível |
+| `GET` | `/api/saude-financeira` | Indicadores, dicas e projeção de saldo para 6 meses (ver abaixo) |
 
 Todas as rotas, exceto `/api/status`, `/api/auth/cadastro` e `/api/auth/login`, exigem o cabeçalho `Authorization: Bearer <token>`.
-As demais rotas são adicionadas pelos próximos PRs (ver a especificação).
+
+## Saúde financeira (desafio)
+
+Calculada no back-end (`backend/src/models/saude.js`), sem API de modelo de linguagem, com base nos **3 últimos meses completos** e nas parcelas já lançadas. Os limites ficam na constante `LIMITES` do model.
+
+| Indicador | Cálculo | Dica |
+|---|---|---|
+| Taxa de poupança | (entradas − saídas) ÷ entradas, por mês e na média | < 10% → alerta; ≥ 20% → elogio |
+| Comprometimento com cartões | soma das próximas 3 faturas ÷ (renda média mensal × 3) | > 30% → alerta |
+| Parcelas futuras | parcelas a vencer, agrupadas pelo mês da fatura | > 0 → informa o total e o mês da última |
+| Categoria fora da curva | gasto do mês atual ÷ média dos 3 meses anteriores | > 30% acima → alerta |
+| Reserva de emergência | saldo das contas marcadas como reserva ÷ média de saídas mensais | < 3 meses → alerta; ≥ 6 → elogio |
+
+**Projeção (6 meses):** média de entradas − média de saídas à vista − parcelas que caem em cada mês. As compras parceladas entram pelas parcelas, e não pela data da compra, para não serem contadas duas vezes. Se algum mês ficar negativo, aparece um alerta.
+
+A página mostra o aviso: *Conteúdo educativo; não constitui recomendação financeira profissional.*
 
 ## Divisão do trabalho
 

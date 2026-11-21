@@ -1,5 +1,5 @@
 -- Carga de demonstração. APAGA todos os dados e cria 2 usuários com 3 meses de lançamentos
--- relativos à data de hoje (o mês atual e os 2 anteriores).
+-- relativos à data de hoje (o mês atual e os 3 anteriores: a saúde financeira usa 3 meses completos).
 -- Uso: npm run db:seed        (depois de npm run db:criar)
 --
 -- Usuários (senha de ambos: demo1234):
@@ -88,7 +88,7 @@ DECLARE
 BEGIN
   FOR u IN SELECT * FROM (VALUES ('ana@exemplo.com', 6200.00, 1800.00), ('bruno@exemplo.com', 4300.00, 1350.00))
            AS t(email, salario, aluguel) LOOP
-    FOR m IN -2..0 LOOP
+    FOR m IN -3..0 LOOP
       PERFORM pg_temp.lancar(u.email, 'entrada', 'Salário',            u.salario, m, 5,  'Salário',     'Salário');
       PERFORM pg_temp.lancar(u.email, 'saida',   'Aluguel',            u.aluguel, m, 10, 'Moradia',     'Conta corrente');
       PERFORM pg_temp.lancar(u.email, 'saida',   'Conta de luz',       142.37 + m * 9, m, 12, 'Moradia', 'Conta corrente');
@@ -104,9 +104,9 @@ END;
 $$;
 
 -- Ana: guarda dinheiro todo mês, gasta mais com lazer no mês atual (categoria "fora da curva").
-SELECT pg_temp.lancar('ana@exemplo.com', 'entrada', 'Reserva de emergência', 7000.00, -2, 6,  'Outros', 'Poupança');
-SELECT pg_temp.lancar('ana@exemplo.com', 'entrada', 'Depósito na poupança',   800.00, -1, 6,  'Outros', 'Poupança');
-SELECT pg_temp.lancar('ana@exemplo.com', 'saida',   'Cinema',                   64.00, -2, 20, 'Lazer',  'Cartão Roxo');
+SELECT pg_temp.lancar('ana@exemplo.com', 'entrada', 'Reserva de emergência', 36000.00, -14, 6,  'Outros', 'Poupança');
+SELECT pg_temp.lancar('ana@exemplo.com', 'saida',   'Cinema',                   64.00, -3, 20, 'Lazer',  'Cartão Roxo');
+SELECT pg_temp.lancar('ana@exemplo.com', 'saida',   'Jantar de aniversário',   142.00, -2, 17, 'Lazer',  'Cartão Verde');
 SELECT pg_temp.lancar('ana@exemplo.com', 'saida',   'Restaurante',             118.00, -1, 21, 'Lazer',  'Cartão Roxo');
 SELECT pg_temp.lancar('ana@exemplo.com', 'saida',   'Show',                    380.00,  0, 2,  'Lazer',  'Cartão Verde');
 SELECT pg_temp.lancar('ana@exemplo.com', 'saida',   'Viagem de fim de semana', 690.00,  0, 4,  'Lazer',  'Conta corrente');
@@ -120,7 +120,7 @@ SELECT pg_temp.lancar('ana@exemplo.com', 'saida', 'Tênis (dia do fechamento)', 
 
 -- Bruno: orçamento mais apertado, pouca reserva e mais parcelas.
 SELECT pg_temp.lancar('bruno@exemplo.com', 'entrada', 'Freela de design',     900.00, -1, 22, 'Outros', 'Conta corrente');
-SELECT pg_temp.lancar('bruno@exemplo.com', 'entrada', 'Depósito na poupança', 1200.00, -2, 7, 'Outros', 'Poupança');
+SELECT pg_temp.lancar('bruno@exemplo.com', 'entrada', 'Depósito na poupança', 1200.00, -14, 7, 'Outros', 'Poupança');
 SELECT pg_temp.lancar('bruno@exemplo.com', 'saida',   'Bar com amigos',       156.00, -2, 13, 'Lazer',  'Cartão Verde');
 SELECT pg_temp.lancar('bruno@exemplo.com', 'saida',   'Streaming',             55.90, -1, 2,  'Lazer',  'Cartão Roxo');
 SELECT pg_temp.lancar('bruno@exemplo.com', 'saida',   'Streaming',             55.90,  0, 2,  'Lazer',  'Cartão Roxo');

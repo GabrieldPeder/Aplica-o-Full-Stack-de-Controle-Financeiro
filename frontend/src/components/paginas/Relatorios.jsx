@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { mesAtual } from '../../services/formatar.js';
 import CampoTexto from '../comuns/CampoTexto.jsx';
 import RelatorioFontesDestinos from './RelatorioFontesDestinos.jsx';
+import RelatorioCategorias from './RelatorioCategorias.jsx';
 
 const ABAS = [
   { id: 'categorias', texto: 'Por categoria' },
@@ -11,7 +12,7 @@ const ABAS = [
 
 export default function Relatorios() {
   const [datas, setDatas] = useState(mesAtual);
-  const [aba, setAba] = useState('fontes-destinos');
+  const [aba, setAba] = useState('categorias');
 
   const completas = Boolean(datas.inicio && datas.fim);
   const erroPeriodo = completas && datas.inicio > datas.fim ? 'A data final deve ser igual ou posterior à inicial.' : '';
@@ -44,11 +45,7 @@ export default function Relatorios() {
 
       {!periodoValido && <p className="detalhe">Escolha um período válido para ver o relatório.</p>}
       {periodoValido && aba === 'fontes-destinos' && <RelatorioFontesDestinos periodo={datas} />}
-      {periodoValido && aba === 'categorias' && (
-        <div className="cartao">
-          <p className="detalhe">O relatório por categoria entra no PR 5.</p>
-        </div>
-      )}
+      {periodoValido && aba === 'categorias' && <RelatorioCategorias periodo={datas} />}
     </section>
   );
 }
