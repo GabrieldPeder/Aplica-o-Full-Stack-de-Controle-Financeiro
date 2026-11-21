@@ -9,13 +9,13 @@ O plano de um PR só é escrito quando o PR vai começar, porque depende do que 
 |---|---|---|---|---|---|
 | 0 | Fundação | Gabriel | João Vitor | [pr0-fundacao.md](pr0-fundacao.md) | Concluído (#2) |
 | 1 | Autenticação | Gabriel | João Vitor | [pr1-autenticacao.md](pr1-autenticacao.md) | Concluído (#5) |
-| 2 | Categorias + fontes/destinos | Gabriel | João Vitor | [pr2-categorias-fontes.md](pr2-categorias-fontes.md) | Aprovado (#6); entrega na main pelo #7 |
-| 3 | Lançamentos e parcelamento | João Vitor | Gabriel | [pr3-lancamentos.md](pr3-lancamentos.md) | Em revisão |
-| 4 | Seed de demonstração | João Vitor | Gabriel | — | Em revisão |
-| 5 | Relatório por categoria + Dashboard | João Vitor | Gabriel | — | Em revisão |
-| 6 | Relatório por fonte/destino + Faturas | Gabriel | João Vitor | [pr6-relatorios-faturas.md](pr6-relatorios-faturas.md) | Em revisão |
-| 7 | Saúde financeira (desafio) | João Vitor | Gabriel | — | Em revisão |
-| 8 | Acabamento e ensaio da apresentação | Ambos | — | — | A fazer |
+| 2 | Categorias + fontes/destinos | Gabriel | João Vitor | [pr2-categorias-fontes.md](pr2-categorias-fontes.md) | Concluído (#6; entregue pelo #7) |
+| 3 | Lançamentos e parcelamento | João Vitor | Gabriel | [pr3-lancamentos.md](pr3-lancamentos.md) | Concluído (#4 e #10) |
+| 4 | Seed de demonstração | João Vitor | Gabriel | [pr4-seed.md](pr4-seed.md) | Concluído (#11; entregue pelo #13) |
+| 5 | Relatório por categoria + Dashboard | João Vitor | Gabriel | [pr5-relatorio-categorias.md](pr5-relatorio-categorias.md) | Concluído (#12; entregue pelo #13) |
+| 6 | Relatório por fonte/destino + Faturas | Gabriel | João Vitor | [pr6-relatorios-faturas.md](pr6-relatorios-faturas.md) | Concluído (#8) |
+| 7 | Saúde financeira (desafio) | João Vitor | Gabriel | [pr7-saude-financeira.md](pr7-saude-financeira.md) | Concluído (#9; entregue pelo #13) |
+| 8 | Acabamento e ensaio da apresentação | Ambos | — | [checklist-final.md](../checklist-final.md) | Em andamento |
 
 ## Como um plano é organizado
 

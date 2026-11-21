@@ -5,7 +5,7 @@
 | **Responsável** | Gabriel (implementa todas as tarefas deste plano) |
 | **Revisor** | João Vitor |
 | **Branch** | `feat/relatorios-faturas` (criada a partir de `feat/categorias-fontes`) |
-| **Situação** | Em revisão |
+| **Situação** | Concluído — PR #8 |
 | **Especificação** | [especificacao.md](../especificacao.md) — seções 4.5 (RF8), 4.6 (RF9) e 5 |
 | **Depende de** | PR 2 (fontes/destinos) e o model de lançamentos do PR 3 |
 
