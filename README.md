@@ -128,6 +128,26 @@ frontend/src/
 - Entre o fechamento e o vencimento, a fatura que acabou de fechar aparece antes da atual como "A pagar".
 - Limite utilizado = soma de todas as parcelas com vencimento hoje ou depois.
 
+**Lançamentos e parcelamento (RF6):**
+
+- Dinheiro é `NUMERIC(12,2)` no banco e todo cálculo na API é feito em **centavos inteiros** (`backend/src/config/dinheiro.js`). R$ 100,00 em 3× gera 33,34 + 33,33 + 33,33: a 1ª parcela recebe o resto.
+- Parcelamento (2 a 48×) só em **saída** num **cartão de crédito**. As parcelas são gravadas numa única transação: ou todas, ou nenhuma.
+- **Edição de compra parcelada:** cada parcela pode ter `descricao`, `categoriaId` e `valor` alterados. Mudar `data`, `tipo`, `fonteDestinoId` ou `totalParcelas` responde 400 com a orientação de excluir a compra e lançar de novo, porque isso mudaria todas as faturas da compra.
+- **Exclusão:** `DELETE /api/lancamentos/:id` apaga só aquela parcela; com `?todasParcelas=true`, apaga a compra inteira. A tela pergunta qual das duas.
+- As regras que dependem do banco (categoria e fonte do próprio usuário → 404; tipo da categoria igual ao do lançamento → 400; parcelamento só no cartão → 400) ficam no model, dentro da mesma transação da gravação.
+
+**Relatório por categoria (RF7):**
+
+- **Período anterior:** se o período escolhido for de meses inteiros (dia 1 ao último dia), compara com o mesmo número de meses inteiros logo antes (outubro → setembro; outubro a dezembro → julho a setembro). Em qualquer outro intervalo, compara com o mesmo número de dias imediatamente anteriores.
+- Categorias que só tiveram gasto no período anterior aparecem com total 0, para mostrar a redução.
+
+**Limites de tentativas (rate limit):**
+
+- Login: 5 tentativas **erradas** a cada 15 minutos por IP (`LOGIN_MAX_TENTATIVAS` e `LOGIN_JANELA_MIN` no `.env`); logins certos não contam. Depois disso, 429 com o tempo de espera.
+- Cadastro: 10 por hora por IP.
+
+O roteiro da apresentação e a conferência item a item com o enunciado estão em [docs/checklist-final.md](docs/checklist-final.md).
+
 ## Padrão de erros da API
 
 Toda resposta de erro tem o formato:

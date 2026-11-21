@@ -5,7 +5,7 @@
 | **Responsável** | João Vitor (implementa todas as tarefas deste plano) |
 | **Revisor** | Gabriel |
 | **Branch** | `feat/lancamentos` |
-| **Situação** | Concluído |
+| **Situação** | Concluído — PR #4 (dinheiro e model) e #10 (rotas e tela) |
 | **Especificação** | [especificacao.md](../especificacao.md) — seções 3, 4.3 e 4.4 |
 | **Depende de** | PR 1 (`autenticar`, `validar`, `AuthContext`, Layout) e PR 2 (categorias e fontes/destinos) |
 
